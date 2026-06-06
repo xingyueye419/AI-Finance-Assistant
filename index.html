@@ -5,373 +5,228 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>智能财务助手 · 专业版</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background: #f1f5f9;
-            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-            padding: 2rem 1.5rem;
-            min-height: 100vh;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            padding: 1.5rem;
         }
-
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
+        .container { max-width: 900px; margin: 0 auto; }
         .card {
             background: white;
-            border-radius: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            padding: 1.8rem;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
             margin-bottom: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             border: 1px solid #e2e8f0;
         }
-
-        h1 {
-            font-size: 1.6rem;
-            font-weight: 600;
-            color: #0f172a;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .badge {
-            background: #e2e8f0;
-            color: #475569;
-            font-size: 0.7rem;
-            font-weight: 500;
-            padding: 0.2rem 0.6rem;
-            border-radius: 30px;
-        }
-
-        .sub {
-            color: #64748b;
-            margin-top: 0.3rem;
-            font-size: 0.85rem;
-            border-left: 3px solid #3b82f6;
-            padding-left: 0.7rem;
-        }
-
-        .input-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.8rem;
-            margin: 1.2rem 0 0.5rem;
-        }
-
-        .input-field {
-            flex: 1;
-            padding: 0.75rem 1rem;
-            font-size: 0.9rem;
-            border: 1px solid #cbd5e1;
-            border-radius: 12px;
-            background: white;
-            outline: none;
-            transition: 0.2s;
-        }
-
-        .input-field:focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
-        }
-
-        button {
-            border: none;
-            padding: 0 1.2rem;
-            border-radius: 12px;
-            font-weight: 500;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: 0.2s;
-            font-family: inherit;
-        }
-
-        button.primary {
-            background: #3b82f6;
-            color: white;
-        }
-        button.primary:hover {
-            background: #2563eb;
-        }
-
-        button.secondary {
-            background: #f1f5f9;
-            color: #1e293b;
-            border: 1px solid #cbd5e1;
-        }
-        button.secondary:hover {
-            background: #e2e8f0;
-        }
-
-        .filter-group {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-            margin: 1rem 0 1rem;
-            border-bottom: 1px solid #e2e8f0;
-            padding-bottom: 0.8rem;
-        }
-
-        .filter-btn {
-            background: #f8fafc;
-            border: 1px solid #cbd5e1;
-            color: #475569;
-            padding: 0.3rem 1rem;
-            font-size: 0.8rem;
-            border-radius: 30px;
-        }
-        .filter-btn.active {
-            background: #3b82f6;
-            color: white;
-            border-color: #3b82f6;
-        }
-
-        .flex-btns {
-            display: flex;
-            gap: 0.8rem;
-            flex-wrap: wrap;
-            margin-top: 0.8rem;
-        }
-
-        .record-list {
-            max-height: 360px;
-            overflow-y: auto;
-            margin: 1rem 0;
-        }
-
-        .record-item {
-            background: #f8fafc;
-            border-radius: 12px;
-            padding: 0.7rem 1rem;
-            margin-bottom: 0.6rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid #e2e8f0;
-        }
-
-        .record-left {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            flex-wrap: wrap;
-        }
-
-        .cat-tag {
-            background: #e2e8f0;
-            padding: 0.2rem 0.7rem;
-            border-radius: 30px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: #334155;
-        }
-
-        .record-date {
-            font-size: 0.7rem;
-            color: #64748b;
-        }
-
-        .amount {
-            font-weight: 600;
-            color: #0f172a;
-        }
-
-        .stats-grid {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            flex-wrap: wrap;
-            margin: 0.5rem 0 1.2rem;
-        }
-
-        .total-box {
-            background: #0f172a;
-            color: white;
-            padding: 0.3rem 1rem;
-            border-radius: 30px;
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
-
-        .advice-box {
-            background: #f1f5f9;
-            border-left: 4px solid #3b82f6;
-            padding: 0.8rem 1rem;
-            border-radius: 12px;
-            margin: 1rem 0;
-            color: #1e293b;
-            font-size: 0.9rem;
-        }
-
-        .progress-item {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            margin: 0.6rem 0;
-        }
-        .progress-label {
-            width: 70px;
-            font-weight: 500;
-            color: #334155;
-        }
-        .progress-bar-bg {
-            flex: 1;
-            background: #e2e8f0;
-            border-radius: 20px;
-            height: 24px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            background: #3b82f6;
-            width: 0%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            padding-right: 8px;
-            color: white;
-            font-size: 0.7rem;
-            font-weight: bold;
-            border-radius: 20px;
-        }
-
-        hr {
-            margin: 1rem 0;
-            border: none;
-            border-top: 1px solid #e2e8f0;
-        }
-
-        .footer-note {
-            text-align: center;
-            font-size: 0.7rem;
-            color: #94a3b8;
-            margin-top: 1rem;
-        }
+        h1 { font-size: 1.6rem; font-weight: 600; color: #0f172a; margin-bottom: 0.2rem; }
+        .sub { color: #64748b; font-size: 0.85rem; margin-bottom: 1.2rem; border-left: 3px solid #3b82f6; padding-left: 0.7rem; }
+        .input-group { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; margin-bottom: 1rem; }
+        input, select { padding: 0.7rem 1rem; border-radius: 12px; border: 1px solid #cbd5e1; font-size: 0.9rem; }
+        .flex-grow { flex: 1; }
+        button { padding: 0.7rem 1.2rem; border-radius: 12px; border: none; font-weight: 500; cursor: pointer; transition: 0.2s; }
+        .btn-primary { background: #3b82f6; color: white; }
+        .btn-primary:hover { background: #2563eb; }
+        .btn-income { background: #10b981; color: white; }
+        .btn-income:hover { background: #059669; }
+        .btn-secondary { background: #f1f5f9; color: #1e293b; border: 1px solid #cbd5e1; }
+        .btn-secondary:hover { background: #e2e8f0; }
+        .filter-group { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 1rem 0; }
+        .filter-btn { background: #f8fafc; border: 1px solid #cbd5e1; padding: 0.3rem 1rem; border-radius: 30px; cursor: pointer; font-size: 0.8rem; }
+        .filter-btn.active { background: #3b82f6; color: white; border-color: #3b82f6; }
+        .stats-row { display: flex; justify-content: space-between; align-items: baseline; padding: 0.5rem 0; border-bottom: 1px solid #e2e8f0; }
+        .stats-label { font-weight: 500; color: #475569; }
+        .stats-number { font-size: 1.3rem; font-weight: 700; }
+        .income-number { color: #10b981; }
+        .expense-number { color: #ef4444; }
+        .balance-positive { color: #10b981; }
+        .balance-negative { color: #ef4444; }
+        .progress-section { margin: 1rem 0; }
+        .progress-bar-bg { background: #e2e8f0; border-radius: 20px; height: 24px; overflow: hidden; margin-top: 0.3rem; }
+        .progress-fill { background: #3b82f6; width: 0%; height: 100%; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; color: white; font-size: 0.7rem; border-radius: 20px; }
+        .insight-card { background: #f8fafc; border-radius: 1rem; padding: 1rem; margin: 1rem 0; border-left: 4px solid #3b82f6; }
+        .trend-canvas { width: 100%; height: 200px; margin: 1rem 0; }
+        .record-item { display: flex; justify-content: space-between; padding: 0.6rem 0; border-bottom: 1px solid #f1f5f9; }
+        .record-cat { background: #e2e8f0; padding: 0.2rem 0.6rem; border-radius: 30px; font-size: 0.7rem; }
+        .income-amount { color: #10b981; font-weight: 500; }
+        .expense-amount { color: #ef4444; font-weight: 500; }
+        hr { margin: 1rem 0; border-color: #e2e8f0; }
+        .footer-note { text-align: center; font-size: 0.7rem; color: #94a3b8; margin-top: 1rem; }
+        .quote-area { margin-top: 1rem; text-align: center; font-size: 0.85rem; color: #475569; background: #fef9e6; border-radius: 2rem; padding: 0.5rem 1rem; display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+        .quote-text { flex: 1; }
+        .refresh-quote { background: none; border: none; font-size: 1.2rem; cursor: pointer; padding: 0 0.3rem; }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
 <div class="container">
     <div class="card">
-        <h1>📊 智能财务助手 <span class="badge">专业版 · 本地计算</span></h1>
-        <div class="sub">不依赖API，完全本地运行 | 支持手动输入，自动分类与统计</div>
+        <h1>📊 智能财务助手</h1>
+        <div class="sub">专业版 · 收入/支出/预算 | 支持补记日期</div>
         <div class="input-group">
-            <input type="text" id="expenseInput" class="input-field" placeholder="例如：早餐8.5元，地铁5元，书49元" autocomplete="off">
-            <button id="addBtn" class="primary">+ 记录</button>
+            <input type="text" id="recordInput" class="flex-grow" placeholder="例如：早餐8.5元 或 工资5000元">
+            <input type="date" id="recordDate" value="">
         </div>
-        <div class="flex-btns">
-            <button id="exportBtn" class="secondary">📎 导出CSV</button>
-            <button id="resetBtn" class="secondary">🗑️ 清空数据</button>
+        <div class="input-group">
+            <button id="addExpenseBtn" class="btn-primary">➕ 支出</button>
+            <button id="addIncomeBtn" class="btn-income">💰 收入</button>
+            <button id="exportBtn" class="btn-secondary">📎 导出CSV</button>
+            <button id="resetBtn" class="btn-secondary">🗑️ 清空数据</button>
         </div>
     </div>
 
     <div class="card">
-        <div style="display:flex; justify-content: space-between; align-items: center;">
-            <h3 style="font-weight: 600;">收支明细</h3>
-            <span style="font-size:0.7rem; color:#64748b;">单位：元</span>
-        </div>
-
-        <div class="filter-group">
+        <div class="filter-group" id="filterGroup">
             <button data-range="today" class="filter-btn">今日</button>
             <button data-range="week" class="filter-btn">本周</button>
             <button data-range="month" class="filter-btn active">本月</button>
             <button data-range="all" class="filter-btn">全部</button>
         </div>
 
-        <div id="recordList" style="min-height: 150px;">
-            <div style="color:#94a3b8; text-align:center; padding: 2rem;">暂无记录，请添加</div>
+        <div class="stats-row">
+            <span class="stats-label">💰 总收入</span>
+            <span class="stats-number income-number" id="totalIncome">0.00</span>
+        </div>
+        <div class="stats-row">
+            <span class="stats-label">💸 总支出</span>
+            <span class="stats-number expense-number" id="totalExpense">0.00</span>
+        </div>
+        <div class="stats-row">
+            <span class="stats-label">📊 结余</span>
+            <span class="stats-number" id="balance">0.00</span>
+        </div>
+
+        <div class="progress-section">
+            <div style="display: flex; justify-content: space-between;">
+                <span>🎯 月度总预算</span>
+                <span>
+                    <input type="number" id="budgetInput" value="5000" step="500" style="width:120px; padding:0.2rem; border-radius:30px;"> 元
+                    <button id="setBudgetBtn" class="btn-secondary" style="padding:0.2rem 0.8rem;">设定</button>
+                </span>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-fill" id="budgetFill" style="width:0%;">0%</div>
+            </div>
+        </div>
+
+        <canvas id="trendChart" class="trend-canvas"></canvas>
+
+        <div class="insight-card" id="insightCard">
+            📌 添加记录后，将显示财务洞察
         </div>
 
         <hr>
-        <div class="stats-grid">
-            <span>💰 当前周期总支出</span>
-            <span class="total-box" id="totalAmount">0.00</span>
-        </div>
+        <h3>📋 流水明细</h3>
+        <div id="recordList" style="max-height: 300px; overflow-y: auto;"></div>
 
-        <div id="categoryChart"></div>
-
-        <div id="adviceArea" class="advice-box">
-            📌 添加支出记录后，将显示财务分析与建议
+        <!-- 财务金句区域 -->
+        <div class="quote-area" id="quoteArea">
+            <span class="quote-text" id="quoteText">✨ 钱是手段，不是目的。</span>
+            <button class="refresh-quote" id="refreshQuoteBtn" title="换一句">🔄</button>
         </div>
 
         <div class="footer-note">
-            🔒 所有数据仅存储于本地浏览器 | 支持导出Excel | 零隐私泄露
+            🔒 所有数据仅存储于本地浏览器 | 可导出CSV备份 | 支持手动选择记账日期
         </div>
     </div>
 </div>
 
 <script>
-    // ---------- 数据存储 ----------
-    let records = [];      // { text, category, amount, timestamp }
+    // ---------- 数据 ----------
+    let records = [];  // 每项 { text, amount, type, category, timestamp }
     let currentRange = "month";
+    let monthlyBudget = 5000;
+    let trendChart = null;
 
-    // ---------- 分类与金额提取（规则引擎）----------
-    function parseExpense(text) {
-        const match = text.match(/\d+(?:\.\d+)?/);
-        const amount = match ? parseFloat(match[0]) : 0;
-        if (amount === 0) return null;
-        let category = "其他";
-        const lower = text.toLowerCase();
-        if (lower.includes('饭') || lower.includes('餐') || lower.includes('早餐') || lower.includes('午餐') || lower.includes('晚餐') ||
-            lower.includes('奶茶') || lower.includes('咖啡') || lower.includes('外卖') || lower.includes('食堂')) category = "餐饮";
-        else if (lower.includes('买') || lower.includes('购物') || lower.includes('淘宝') || lower.includes('京东') || lower.includes('书')) category = "购物";
-        else if (lower.includes('车') || lower.includes('地铁') || lower.includes('公交') || lower.includes('滴滴') || lower.includes('打车')) category = "交通";
-        else if (lower.includes('电影') || lower.includes('游戏') || lower.includes('门票') || lower.includes('娱乐')) category = "娱乐";
-        return { category, amount };
+    // 财务金句库（第一句已修改）
+    const quotes = [
+        "💡 钱是手段，不是目的。",
+        "💡 存钱不是为了压抑欲望，而是为了在关键时刻有选择权。",
+        "💡 买得起是能力，配得上才是智慧。",
+        "💡 财务自由不是拥有很多钱，而是有能力拒绝不想做的事。",
+        "💡 记账不是为了焦虑，而是为了更安心地花钱。",
+        "💡 最好的投资是提升自己，回报率无穷大。",
+        "💡 预算不是束缚，是你对未来的邀请。",
+        "💡 年轻就是最大的资本。"
+    ];
+
+    function updateQuote() {
+        const randomIndex = Math.floor(Math.random() * quotes.length);
+        document.getElementById('quoteText').innerText = quotes[randomIndex];
     }
 
-    // 添加记录
-    function addExpense(rawInput) {
+    // 初始化日期选择器为今天
+    function setDefaultDate() {
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        document.getElementById('recordDate').value = `${yyyy}-${mm}-${dd}`;
+    }
+
+    // 提取金额
+    function extractAmount(text) {
+        const match = text.match(/\d+(?:\.\d+)?/);
+        return match ? parseFloat(match[0]) : 0;
+    }
+
+    // 简单分类（仅支出）
+    function getCategory(text) {
+        const lower = text.toLowerCase();
+        if (lower.includes('饭') || lower.includes('餐') || lower.includes('早餐') || lower.includes('午餐') || lower.includes('晚餐') ||
+            lower.includes('奶茶') || lower.includes('咖啡') || lower.includes('外卖')) return "餐饮";
+        if (lower.includes('买') || lower.includes('购物') || lower.includes('淘宝') || lower.includes('京东') || lower.includes('书')) return "购物";
+        if (lower.includes('车') || lower.includes('地铁') || lower.includes('公交') || lower.includes('滴滴') || lower.includes('打车')) return "交通";
+        if (lower.includes('电影') || lower.includes('游戏') || lower.includes('门票')) return "娱乐";
+        return "其他";
+    }
+
+    // 添加记录（支持自定义日期）
+    function addRecord(rawInput, type, customDateStr = null) {
         if (!rawInput.trim()) return;
-        let parts = rawInput.replace(/，/g, ',').split(',');
+        const parts = rawInput.replace(/，/g, ',').split(',');
         let added = 0;
         for (let part of parts) {
             part = part.trim();
-            if (part === "") continue;
-            const parsed = parseExpense(part);
-            if (parsed && parsed.amount > 0) {
-                records.push({
-                    text: part,
-                    category: parsed.category,
-                    amount: parsed.amount,
-                    timestamp: Date.now()
-                });
-                added++;
-            } else {
-                alert(`无法识别: "${part}"，请确保包含数字金额`);
+            if (!part) continue;
+            const amount = extractAmount(part);
+            if (amount === 0) {
+                alert(`无法识别金额：${part}`);
+                continue;
             }
+            let timestamp;
+            if (customDateStr) {
+                const date = new Date(customDateStr);
+                if (isNaN(date.getTime())) {
+                    timestamp = Date.now();
+                } else {
+                    // 保留当前时间的时分秒，避免同一天记录顺序混乱
+                    const now = new Date();
+                    date.setHours(now.getHours(), now.getMinutes(), now.getSeconds());
+                    timestamp = date.getTime();
+                }
+            } else {
+                timestamp = Date.now();
+            }
+            const category = (type === 'expense') ? getCategory(part) : "收入";
+            records.push({
+                text: part,
+                amount: amount,
+                type: type,
+                category: category,
+                timestamp: timestamp
+            });
+            added++;
         }
         if (added) render();
     }
 
-    // ---------- 时间筛选 ----------
-    function isSameDay(ts, date) {
-        const d = new Date(ts);
-        return d.getFullYear() === date.getFullYear() &&
-               d.getMonth() === date.getMonth() &&
-               d.getDate() === date.getDate();
-    }
-    function isSameWeek(ts, baseDate) {
-        const d = new Date(ts);
-        const start = new Date(baseDate);
-        start.setDate(baseDate.getDate() - baseDate.getDay());
-        start.setHours(0,0,0,0);
-        const end = new Date(start);
-        end.setDate(start.getDate() + 6);
-        end.setHours(23,59,59,999);
-        return d >= start && d <= end;
-    }
-    function isSameMonth(ts, baseDate) {
-        const d = new Date(ts);
-        return d.getFullYear() === baseDate.getFullYear() && d.getMonth() === baseDate.getMonth();
-    }
-
-    function getFilteredRecords() {
+    // 日期筛选
+    function isSameDay(ts, date) { const d = new Date(ts); return d.toDateString() === date.toDateString(); }
+    function isSameWeek(ts, base) { const d = new Date(ts); const start = new Date(base); start.setDate(base.getDate() - base.getDay()); start.setHours(0,0,0,0); const end = new Date(start); end.setDate(start.getDate()+6); return d >= start && d <= end; }
+    function isSameMonth(ts, base) { const d = new Date(ts); return d.getMonth() === base.getMonth() && d.getFullYear() === base.getFullYear(); }
+    function getFiltered() {
         const now = new Date();
         if (currentRange === "today") return records.filter(r => isSameDay(r.timestamp, now));
         if (currentRange === "week") return records.filter(r => isSameWeek(r.timestamp, now));
@@ -379,143 +234,151 @@
         return [...records];
     }
 
-    // ---------- 生成专业财务建议 ----------
-    function generateAdvice(filtered, catMap, total) {
-        if (filtered.length === 0) return "暂无支出数据。添加记录后可获得财务分析。";
-        // 找出最高类别
-        let maxCat = "其他", maxAmt = 0;
-        for (let [cat, amt] of catMap.entries()) {
-            if (amt > maxAmt) { maxCat = cat; maxAmt = amt; }
-        }
-        const ratio = total > 0 ? (maxAmt / total * 100).toFixed(1) : 0;
-        if (maxCat === "餐饮") {
-            return `🍽️ 餐饮支出占比最高（${ratio}%），建议制定每周外食预算，或尝试带饭降低开销。`;
-        } else if (maxCat === "购物") {
-            return `🛒 购物支出占总支出 ${ratio}%，建议区分“需要”与“想要”，避免冲动消费。`;
-        } else if (maxCat === "交通") {
-            return `🚗 交通费用占比 ${ratio}%，可考虑公共交通套餐或拼车降低单次成本。`;
-        } else if (maxCat === "娱乐") {
-            return `🎬 娱乐开销占比 ${ratio}%，适度放松有益，但可寻找免费或低成本替代活动。`;
-        } else {
-            return `📊 支出分布较均衡。持续记账能帮助优化消费结构，提升储蓄率。`;
-        }
-    }
-
-    // 渲染UI
+    // 渲染所有UI
     function render() {
-        const filtered = getFilteredRecords();
-        const recordDiv = document.getElementById('recordList');
-        if (filtered.length === 0) {
-            recordDiv.innerHTML = '<div style="color:#94a3b8; text-align:center; padding: 2rem;">📭 当前周期无支出记录</div>';
-        } else {
-            recordDiv.innerHTML = filtered.map(r => `
-                <div class="record-item">
-                    <div class="record-left">
-                        <span class="cat-tag">${r.category}</span>
-                        <span>${escapeHtml(r.text)}</span>
-                        <span class="record-date">${new Date(r.timestamp).toLocaleDateString()}</span>
-                    </div>
-                    <span class="amount">¥${r.amount.toFixed(2)}</span>
-                </div>
-            `).join('');
+        const filtered = getFiltered();
+        // 统计收入支出
+        let totalIncome = 0, totalExpense = 0;
+        filtered.forEach(r => {
+            if (r.type === 'income') totalIncome += r.amount;
+            else totalExpense += r.amount;
+        });
+        const balance = totalIncome - totalExpense;
+        document.getElementById('totalIncome').innerText = totalIncome.toFixed(2);
+        document.getElementById('totalExpense').innerText = totalExpense.toFixed(2);
+        const balanceSpan = document.getElementById('balance');
+        balanceSpan.innerText = balance.toFixed(2);
+        balanceSpan.className = `stats-number ${balance >= 0 ? 'balance-positive' : 'balance-negative'}`;
+
+        // 预算进度条（基于本月支出）
+        const now = new Date();
+        const currentMonthExpense = records.filter(r => r.type === 'expense' && isSameMonth(r.timestamp, now))
+                                            .reduce((s,r) => s + r.amount, 0);
+        const percent = Math.min(100, (currentMonthExpense / monthlyBudget) * 100);
+        const fillDiv = document.getElementById('budgetFill');
+        fillDiv.style.width = `${percent}%`;
+        fillDiv.innerText = `${Math.round(percent)}%`;
+        fillDiv.style.background = percent > 100 ? "#ef4444" : "#3b82f6";
+
+        // 近7天趋势图
+        const last7Days = [];
+        const dayExpense = {};
+        for (let i = 6; i >= 0; i--) {
+            const d = new Date();
+            d.setDate(d.getDate() - i);
+            const key = `${d.getMonth()+1}/${d.getDate()}`;
+            last7Days.push(key);
+            dayExpense[key] = 0;
         }
+        records.forEach(r => {
+            if (r.type !== 'expense') return;
+            const d = new Date(r.timestamp);
+            const key = `${d.getMonth()+1}/${d.getDate()}`;
+            if (dayExpense.hasOwnProperty(key)) dayExpense[key] += r.amount;
+        });
+        const expenseData = last7Days.map(day => dayExpense[day]);
+        if (trendChart) trendChart.destroy();
+        const ctx = document.getElementById('trendChart').getContext('2d');
+        trendChart = new Chart(ctx, {
+            type: 'line',
+            data: { labels: last7Days, datasets: [{ label: '支出 (元)', data: expenseData, borderColor: '#ef4444', tension: 0.2, fill: false }] },
+            options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'top' } } }
+        });
 
-        const total = filtered.reduce((s, r) => s + r.amount, 0);
-        document.getElementById('totalAmount').innerHTML = `¥${total.toFixed(2)}`;
+        // 洞察卡片
+        let insight = "";
+        if (filtered.length === 0) insight = "添加记录后，将显示财务洞察。";
+        else {
+            if (balance < 0) insight = "⚠️ 本期结余为负，建议控制支出。";
+            else if (balance < totalIncome * 0.1 && totalIncome > 0) insight = "📉 结余率偏低，注意储蓄。";
+            else insight = "✅ 财务状况良好，继续保持。";
+            if (currentMonthExpense > monthlyBudget) insight += " 本月支出已超出总预算！";
+        }
+        document.getElementById('insightCard').innerHTML = `📌 ${insight}`;
 
-        // 分类统计 & 进度条
-        const catMap = new Map();
-        filtered.forEach(r => catMap.set(r.category, (catMap.get(r.category) || 0) + r.amount));
-        const sorted = Array.from(catMap.entries()).sort((a,b) => b[1] - a[1]);
-        const maxAmt = sorted.length ? sorted[0][1] : 1;
-        const chartDiv = document.getElementById('categoryChart');
-        if (sorted.length === 0) {
-            chartDiv.innerHTML = '<div style="color:#94a3b8; font-size:0.8rem;">暂无分类数据</div>';
-        } else {
-            chartDiv.innerHTML = sorted.map(([cat, amt]) => {
-                const percent = (amt / maxAmt) * 100;
-                return `
-                    <div class="progress-item">
-                        <div class="progress-label">${cat}</div>
-                        <div class="progress-bar-bg">
-                            <div class="progress-fill" style="width: ${percent}%;">¥${amt.toFixed(2)}</div>
-                        </div>
-                    </div>
-                `;
+        // 渲染记录列表
+        const listDiv = document.getElementById('recordList');
+        if (filtered.length === 0) listDiv.innerHTML = '<div style="color:#94a3b8;">暂无记录</div>';
+        else {
+            listDiv.innerHTML = filtered.map(r => {
+                const amountClass = r.type === 'income' ? 'income-amount' : 'expense-amount';
+                const sign = r.type === 'income' ? '+ ' : '- ';
+                const dateStr = new Date(r.timestamp).toLocaleDateString();
+                return `<div class="record-item">
+                    <div><span class="record-cat">${r.category}</span> ${r.text} <span style="font-size:0.7rem; color:#94a3b8;">${dateStr}</span></div>
+                    <div class="${amountClass}">${sign}¥${r.amount.toFixed(2)}</div>
+                </div>`;
             }).join('');
         }
-
-        const advice = generateAdvice(filtered, catMap, total);
-        document.getElementById('adviceArea').innerHTML = `📌 ${advice}`;
-    }
-
-    function escapeHtml(str) {
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        });
     }
 
     // 导出CSV
     function exportCSV() {
-        if (records.length === 0) { alert("无数据可导出"); return; }
-        const rows = [["日期", "原始描述", "分类", "金额(元)"]];
+        if (!records.length) { alert("无数据可导出"); return; }
+        const rows = [["日期","原文","分类","类型","金额"]];
         records.forEach(r => {
-            rows.push([new Date(r.timestamp).toLocaleDateString(), r.text, r.category, r.amount.toFixed(2)]);
+            rows.push([new Date(r.timestamp).toLocaleDateString(), r.text, r.category, r.type === 'income' ? '收入' : '支出', r.amount]);
         });
         const csv = rows.map(row => row.join(",")).join("\n");
-        const blob = new Blob(["\uFEFF" + csv], {type: "text/csv;charset=utf-8"});
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = "finance_data.csv";
-        link.click();
-        URL.revokeObjectURL(link.href);
+        const blob = new Blob(["\uFEFF" + csv], {type: "text/csv"});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `finance_${new Date().toISOString().slice(0,19)}.csv`;
+        a.click();
+        URL.revokeObjectURL(a.href);
     }
 
-    function resetAll() {
-        if (confirm("确认清空所有记账数据吗？")) {
-            records = [];
-            render();
-        }
-    }
+    function resetAll() { if(confirm("清空所有数据？")) { records = []; render(); } }
 
-    function setRange(range) {
-        currentRange = range;
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            if (btn.dataset.range === range) btn.classList.add('active');
-            else btn.classList.remove('active');
-        });
-        render();
-    }
-
-    // 绑定事件
-    document.getElementById('addBtn').onclick = () => {
-        const input = document.getElementById('expenseInput');
-        addExpense(input.value);
+    // 事件绑定
+    document.getElementById('addExpenseBtn').onclick = () => {
+        const input = document.getElementById('recordInput');
+        const dateVal = document.getElementById('recordDate').value;
+        addRecord(input.value, 'expense', dateVal);
         input.value = '';
-        input.focus();
+        setDefaultDate(); // 重置日期为今天
+    };
+    document.getElementById('addIncomeBtn').onclick = () => {
+        const input = document.getElementById('recordInput');
+        const dateVal = document.getElementById('recordDate').value;
+        addRecord(input.value, 'income', dateVal);
+        input.value = '';
+        setDefaultDate();
     };
     document.getElementById('exportBtn').onclick = exportCSV;
     document.getElementById('resetBtn').onclick = resetAll;
-    document.getElementById('expenseInput').onkeypress = (e) => {
-        if (e.key === 'Enter') document.getElementById('addBtn').click();
+    document.getElementById('setBudgetBtn').onclick = () => {
+        const val = parseFloat(document.getElementById('budgetInput').value);
+        if (!isNaN(val) && val > 0) monthlyBudget = val;
+        render();
     };
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.addEventListener('click', () => setRange(btn.dataset.range));
+    document.getElementById('refreshQuoteBtn').onclick = updateQuote;
+
+    document.querySelectorAll('[data-range]').forEach(btn => {
+        btn.onclick = () => {
+            currentRange = btn.dataset.range;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            render();
+        };
     });
 
-    // 添加几条示例数据（展示用）
-    (function initDemo() {
-        const today = new Date();
-        records.push({ text: "早餐 8.5元", category: "餐饮", amount: 8.5, timestamp: today.getTime() });
-        records.push({ text: "地铁 5元", category: "交通", amount: 5, timestamp: today.getTime() });
-        const yesterday = new Date(today); yesterday.setDate(today.getDate()-1);
-        records.push({ text: "购书 49元", category: "购物", amount: 49, timestamp: yesterday.getTime() });
-        const lastWeek = new Date(today); lastWeek.setDate(today.getDate()-5);
-        records.push({ text: "电影票 38元", category: "娱乐", amount: 38, timestamp: lastWeek.getTime() });
+    document.getElementById('recordInput').onkeypress = (e) => {
+        if (e.key === 'Enter') document.getElementById('addExpenseBtn').click();
+    };
+
+    // 初始化
+    setDefaultDate();
+    // 示例数据
+    (function init() {
+        const now = new Date();
+        records.push({ text: "早餐8.5元", amount: 8.5, type: 'expense', category: "餐饮", timestamp: now.getTime() });
+        records.push({ text: "地铁5元", amount: 5, type: 'expense', category: "交通", timestamp: now.getTime() });
+        records.push({ text: "工资5000元", amount: 5000, type: 'income', category: "收入", timestamp: now.getTime() });
+        const yesterday = new Date(now); yesterday.setDate(now.getDate()-1);
+        records.push({ text: "购书49元", amount: 49, type: 'expense', category: "购物", timestamp: yesterday.getTime() });
         render();
+        updateQuote();
     })();
 </script>
 </body>
