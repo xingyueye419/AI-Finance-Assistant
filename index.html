@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>智能财务助手 · 专业版</title>
+    <title>智能财务助手 · AI算力产业链财务分析</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -11,7 +12,7 @@
             font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
             padding: 1.5rem;
         }
-        .container { max-width: 900px; margin: 0 auto; }
+        .container { max-width: 1000px; margin: 0 auto; }
         .card {
             background: white;
             border-radius: 1.5rem;
@@ -22,6 +23,37 @@
         }
         h1 { font-size: 1.6rem; font-weight: 600; color: #0f172a; margin-bottom: 0.2rem; }
         .sub { color: #64748b; font-size: 0.85rem; margin-bottom: 1.2rem; border-left: 3px solid #3b82f6; padding-left: 0.7rem; }
+
+        /* Tab 导航 */
+        .tab-nav {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            background: white;
+            padding: 0.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 0.8rem 1rem;
+            border-radius: 0.8rem;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            background: transparent;
+            color: #64748b;
+            transition: 0.2s;
+            font-size: 0.9rem;
+        }
+        .tab-btn.active {
+            background: #3b82f6;
+            color: white;
+        }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
         .input-group { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; margin-bottom: 1rem; }
         input, select { padding: 0.7rem 1rem; border-radius: 12px; border: 1px solid #cbd5e1; font-size: 0.9rem; }
         .flex-grow { flex: 1; }
@@ -56,330 +88,782 @@
         .quote-area { margin-top: 1rem; text-align: center; font-size: 0.85rem; color: #475569; background: #fef9e6; border-radius: 2rem; padding: 0.5rem 1rem; display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
         .quote-text { flex: 1; }
         .refresh-quote { background: none; border: none; font-size: 1.2rem; cursor: pointer; padding: 0 0.3rem; }
+
+        /* AI算力产业链分析样式 */
+        .chain-flow {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+        .chain-node {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            padding: 0.6rem 1rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-align: center;
+        }
+        .chain-arrow { color: #94a3b8; font-size: 1.2rem; display: flex; align-items: center; }
+        .metric-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        .metric-card {
+            background: #f8fafc;
+            border-radius: 1rem;
+            padding: 1rem;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+        .metric-value { font-size: 1.5rem; font-weight: 700; color: #0f172a; }
+        .metric-label { font-size: 0.8rem; color: #64748b; margin-top: 0.3rem; }
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1rem 0;
+        }
+        .chart-box { background: #f8fafc; border-radius: 1rem; padding: 1rem; border: 1px solid #e2e8f0; }
+        .chart-box canvas { max-height: 250px; }
+        .calc-section {
+            background: #f0f9ff;
+            border-radius: 1rem;
+            padding: 1.2rem;
+            border: 1px solid #bae6fd;
+            margin-top: 1rem;
+        }
+        .calc-row {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin: 0.5rem 0;
+            flex-wrap: wrap;
+        }
+        .calc-result {
+            background: white;
+            border-radius: 0.8rem;
+            padding: 0.8rem 1.2rem;
+            margin-top: 0.8rem;
+            font-weight: 500;
+            color: #0f172a;
+        }
+        .data-note {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+        .badge {
+            display: inline-block;
+            padding: 0.15rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            margin-left: 0.3rem;
+        }
+        .badge-green { background: #dcfce7; color: #166534; }
+        .badge-yellow { background: #fef9c3; color: #854d0e; }
+        .badge-red { background: #fee2e2; color: #991b1b; }
+        .dupont-formula {
+            background: #f8fafc;
+            border-radius: 1rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            border: 1px solid #e2e8f0;
+            font-size: 0.9rem;
+            color: #475569;
+            text-align: center;
+        }
+        .dupont-formula strong {
+            color: #0f172a;
+            font-size: 1.1rem;
+        }
+        .company-tag {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-right: 0.3rem;
+            background: #e0e7ff;
+            color: #3730a3;
+        }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
 <div class="container">
-    <div class="card">
-        <h1>📊 智能财务助手</h1>
-        <div class="sub">专业版 · 收入/支出/预算 | 支持补记日期</div>
-        <div class="input-group">
-            <input type="text" id="recordInput" class="flex-grow" placeholder="例如：早餐8.5元 或 工资5000元">
-            <input type="date" id="recordDate" value="">
+    <!-- Tab 导航 -->
+    <div class="tab-nav">
+        <button class="tab-btn active" onclick="switchTab('personal')">个人财务助手</button>
+        <button class="tab-btn" onclick="switchTab('industry')">AI算力产业链财务分析</button>
+    </div>
+
+    <!-- 面板1：个人财务助手 -->
+    <div id="personal-tab" class="tab-panel active">
+        <div class="card">
+            <h1>📊 智能财务助手</h1>
+            <div class="sub">专业版 · 收入/支出/预算 | 支持补记日期</div>
+            <div class="input-group">
+                <input type="text" id="recordInput" class="flex-grow" placeholder="例如：早餐8.5元 或 工资5000元">
+                <input type="date" id="recordDate" value="">
+            </div>
+            <div class="input-group">
+                <button id="addExpenseBtn" class="btn-primary">➕ 支出</button>
+                <button id="addIncomeBtn" class="btn-income">💰 收入</button>
+                <button id="exportBtn" class="btn-secondary">📎 导出CSV</button>
+                <button id="resetBtn" class="btn-secondary">🗑️ 清空数据</button>
+            </div>
         </div>
-        <div class="input-group">
-            <button id="addExpenseBtn" class="btn-primary">➕ 支出</button>
-            <button id="addIncomeBtn" class="btn-income">💰 收入</button>
-            <button id="exportBtn" class="btn-secondary">📎 导出CSV</button>
-            <button id="resetBtn" class="btn-secondary">🗑️ 清空数据</button>
+        <div class="card">
+            <div class="filter-group" id="filterGroup">
+                <button data-range="today" class="filter-btn">今日</button>
+                <button data-range="week" class="filter-btn">本周</button>
+                <button data-range="month" class="filter-btn active">本月</button>
+                <button data-range="all" class="filter-btn">全部</button>
+            </div>
+            <div class="stats-row">
+                <span class="stats-label">💰 总收入</span>
+                <span class="stats-number income-number" id="totalIncome">0.00</span>
+            </div>
+            <div class="stats-row">
+                <span class="stats-label">💸 总支出</span>
+                <span class="stats-number expense-number" id="totalExpense">0.00</span>
+            </div>
+            <div class="stats-row">
+                <span class="stats-label">📊 结余</span>
+                <span class="stats-number" id="balance">0.00</span>
+            </div>
+            <div class="progress-section">
+                <div style="display: flex; justify-content: space-between;">
+                    <span>🎯 月度总预算</span>
+                    <span>
+                        <input type="number" id="budgetInput" value="5000" step="500" style="width:120px; padding:0.2rem; border-radius:30px;"> 元
+                        <button id="setBudgetBtn" class="btn-secondary" style="padding:0.2rem 0.8rem;">设定</button>
+                    </span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-fill" id="budgetFill" style="width:0%;">0%</div>
+                </div>
+            </div>
+            <canvas id="trendChart" class="trend-canvas"></canvas>
+            <div class="insight-card" id="insightCard">
+                📌 添加记录后，将显示财务洞察
+            </div>
+            <hr>
+            <h3>📋 流水明细</h3>
+            <div id="recordList" style="max-height: 300px; overflow-y: auto;"></div>
+            <div class="quote-area" id="quoteArea">
+                <span class="quote-text" id="quoteText">💡 钱是手段，不是目的。</span>
+                <button class="refresh-quote" id="refreshQuoteBtn" title="换一句">🔄</button>
+            </div>
+            <div class="footer-note">
+                🔒 所有数据仅存储于本地浏览器 | 可导出CSV备份 | 支持手动选择记账日期
+            </div>
         </div>
     </div>
 
-    <div class="card">
-        <div class="filter-group" id="filterGroup">
-            <button data-range="today" class="filter-btn">今日</button>
-            <button data-range="week" class="filter-btn">本周</button>
-            <button data-range="month" class="filter-btn active">本月</button>
-            <button data-range="all" class="filter-btn">全部</button>
-        </div>
+    <!-- 面板2：AI算力产业链财务分析 -->
+    <div id="industry-tab" class="tab-panel">
+        <div class="card">
+            <h1>🖥️ AI算力产业链财务分析</h1>
+            <div class="sub">财务BP视角 · 毛利率 · ROE杜邦拆解 · 资本开支 · 现金流 · 预算模型</div>
 
-        <div class="stats-row">
-            <span class="stats-label">💰 总收入</span>
-            <span class="stats-number income-number" id="totalIncome">0.00</span>
-        </div>
-        <div class="stats-row">
-            <span class="stats-label">💸 总支出</span>
-            <span class="stats-number expense-number" id="totalExpense">0.00</span>
-        </div>
-        <div class="stats-row">
-            <span class="stats-label">📊 结余</span>
-            <span class="stats-number" id="balance">0.00</span>
-        </div>
-
-        <div class="progress-section">
-            <div style="display: flex; justify-content: space-between;">
-                <span>🎯 月度总预算</span>
-                <span>
-                    <input type="number" id="budgetInput" value="5000" step="500" style="width:120px; padding:0.2rem; border-radius:30px;"> 元
-                    <button id="setBudgetBtn" class="btn-secondary" style="padding:0.2rem 0.8rem;">设定</button>
-                </span>
+            <h3 style="margin-top:1rem;">产业链全景</h3>
+            <div class="chain-flow">
+                <div class="chain-node">芯片设计<br><small>英伟达/AMD</small></div>
+                <div class="chain-arrow">→</div>
+                <div class="chain-node">HBM存储<br><small>SK海力士/美光</small></div>
+                <div class="chain-arrow">→</div>
+                <div class="chain-node">晶圆制造<br><small>台积电</small></div>
+                <div class="chain-arrow">→</div>
+                <div class="chain-node">服务器制造<br><small>浪潮/超微</small></div>
+                <div class="chain-arrow">→</div>
+                <div class="chain-node">数据中心<br><small>Equinix等</small></div>
+                <div class="chain-arrow">→</div>
+                <div class="chain-node">云服务<br><small>AWS/Azure</small></div>
             </div>
-            <div class="progress-bar-bg">
-                <div class="progress-fill" id="budgetFill" style="width:0%;">0%</div>
+
+            <h3>关键财务指标（最新财报口径）</h3>
+            <div class="metric-cards">
+                <div class="metric-card">
+                    <div class="metric-value" style="color:#3b82f6;">75.0%</div>
+                    <div class="metric-label">英伟达毛利率<br><small>1Q FY2027 GAAP</small></div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" style="color:#8b5cf6;">83.0%</div>
+                    <div class="metric-label">SK海力士毛利率<br><small>Q2 2026</small></div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" style="color:#06b6d4;">67.7%</div>
+                    <div class="metric-label">台积电毛利率<br><small>2Q 2026</small></div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" style="color:#f59e0b;">4.88%</div>
+                    <div class="metric-label">浪潮信息毛利率<br><small>2025全年</small></div>
+                </div>
             </div>
         </div>
 
-        <canvas id="trendChart" class="trend-canvas"></canvas>
-
-        <div class="insight-card" id="insightCard">
-            📌 添加记录后，将显示财务洞察
+        <div class="card">
+            <h3>各环节毛利率对比</h3>
+            <div class="chart-box">
+                <canvas id="marginChart"></canvas>
+            </div>
+            <p class="data-note">数据来源：各公司最新财报（英伟达1Q FY2027、台积电2Q26、SK海力士Q2 2026实际值、浪潮信息2025年报）<br>注：服务器制造环节毛利率极低，主要系价格竞争加剧及原材料成本上行</p>
         </div>
 
-        <hr>
-        <h3>📋 流水明细</h3>
-        <div id="recordList" style="max-height: 300px; overflow-y: auto;"></div>
-
-        <!-- 财务金句区域 -->
-        <div class="quote-area" id="quoteArea">
-            <span class="quote-text" id="quoteText">✨ 钱是手段，不是目的。</span>
-            <button class="refresh-quote" id="refreshQuoteBtn" title="换一句">🔄</button>
+        <div class="card">
+            <h3>ROE杜邦拆解</h3>
+            <div class="dupont-formula">
+                <strong>ROE = 净利率 × 总资产周转率 × 权益乘数</strong><br>
+                <span style="font-size:0.8rem;">杜邦分析体系：拆解股东回报的来源——盈利能力、运营效率、财务杠杆</span>
+            </div>
+            <div class="chart-box">
+                <canvas id="roeChart"></canvas>
+            </div>
+            <div style="font-size:0.85rem;color:#475569;line-height:1.7;margin-top:0.8rem;">
+                <p><span class="company-tag">英伟达</span>ROE <strong>101.5%</strong>：Fabless轻资产模式 + CUDA生态护城河，净利率极高，是AI算力产业链回报最高的环节。</p>
+                <p><span class="company-tag">台积电</span>ROE <strong>35.2%</strong>（TTM）：技术垄断带来定价权，净利率和资产周转率双高，资本回报稳健。</p>
+                <p><span class="company-tag">SK海力士</span>ROE <strong>31.1%</strong>：HBM供不应求推动毛利率跃升至83%，Q2 2026营业利润率76%，净利润创历史新高，利润质量极高。</p>
+                <p><span class="company-tag">美光</span>ROE <strong>~22%</strong>：存储周期复苏+AI需求驱动，Q2 FY2026经营现金流$119亿，自由现金流创新高。</p>
+                <p><span class="company-tag">AMD</span>ROE <strong>7.8%</strong>：数据中心业务增长但被英伟达压制，盈利能力有待提升。</p>
+                <p><span class="company-tag">浪潮信息</span>ROE <strong>11.6%</strong>：低利润率（1.46%）+ 高周转 + 适度杠杆，硬件组装模式议价能力弱。</p>
+            </div>
+            <p class="data-note">ROE数据来源：各公司最新财报及券商研报（截至2026年8月）</p>
         </div>
 
-        <div class="footer-note">
-            🔒 所有数据仅存储于本地浏览器 | 可导出CSV备份 | 支持手动选择记账日期
+        <div class="card">
+            <h3>四大云厂商资本开支趋势（2025实际 vs 2026E指引）</h3>
+            <div class="chart-box">
+                <canvas id="capexChart"></canvas>
+            </div>
+            <p class="data-note">单位：亿美元 | 2025年为实际值，2026E为业绩指引区间中值 | 四大厂合计同比增长约77%</p>
+        </div>
+
+        <div class="card">
+            <h3>现金流健康度评分</h3>
+            <div class="chart-grid">
+                <div class="chart-box">
+                    <canvas id="cashflowRadar"></canvas>
+                </div>
+                <div style="padding:1rem;">
+                    <p style="font-size:0.9rem;color:#475569;line-height:1.6;">
+                        <strong>财务BP解读：</strong><br><br>
+                        1. <strong>芯片设计层</strong>（英伟达）：毛利率75%+，经营现金流极强，ROE超100%。<span class="badge badge-green">极度健康</span><br><br>
+                        2. <strong>HBM/存储层</strong>（SK海力士/美光）：毛利率83%+，营业利润率76%，经营现金流大幅高于净利润，利润全是真金白银。<span class="badge badge-green">健康</span><br><br>
+                        3. <strong>晶圆制造层</strong>（台积电）：毛利率67.7%，技术垄断带来稳定现金流， capex大但回报确定。<span class="badge badge-green">健康</span><br><br>
+                        4. <strong>服务器制造层</strong>（浪潮信息）：毛利率仅4.88%，净利率1.46%，议价能力极弱，属于"辛苦钱"环节。<span class="badge badge-red">承压</span><br><br>
+                        5. <strong>云服务层</strong>（AWS/Azure）：资本开支增速最快，Azure AI毛利率仅20%+，短期投入期。<span class="badge badge-yellow">投入期</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>🔄 营运资本效率（现金转换周期）</h3>
+            <div class="dupont-formula">
+                <strong>CCC = 应收账款周转天数 + 存货周转天数 - 应付账款周转天数</strong><br>
+                <span style="font-size:0.8rem;">现金转换周期：衡量企业从投入资金采购到收回销售现金所需的平均天数，越短代表资金周转效率越高</span>
+            </div>
+            <div class="chart-box">
+                <canvas id="cccChart"></canvas>
+            </div>
+            <div style="font-size:0.85rem;color:#475569;line-height:1.7;margin-top:0.8rem;">
+                <p><span class="company-tag">台积电</span>CCC <strong>~76天</strong>：DSO仅26天（客户预付款多），运营效率最高，资金占用最小。</p>
+                <p><span class="company-tag">浪潮信息</span>CCC <strong>~116天</strong>：DIO高达139天（大量芯片备货），毛利率仅4.88%却要承担4个月的资金占用，利息成本直接侵蚀本就微薄的利润。<span class="badge badge-red">资金压力大</span></p>
+                <p><span class="company-tag">英伟达</span>CCC <strong>~112天</strong>：DIO高达140天（AI芯片生产周期长），但毛利率75%足以覆盖资金成本，且对下游有强定价权。</p>
+                <p><span class="company-tag">SK海力士</span>CCC <strong>~129天</strong>：DIO 128天（存储芯片制造周期长），但HBM供不应求，预收款模式部分抵消了资金占用压力。</p>
+            </div>
+            <div class="insight-card" style="background:#fffbeb;border-left-color:#f59e0b;margin-top:1rem;">
+                <strong>财务BP核心洞察</strong><br><br>
+                <p style="margin-bottom:0.6rem;"><span class="company-tag">毛利率 × CCC = 真实盈利质量</span>台积电毛利率67.7%+CCC 76天 = 高效高利；浪潮信息毛利率4.88%+CCC 116天 = 低利低效，这就是为什么服务器制造环节是产业链最苦的位置。</p>
+                <p style="margin-bottom:0.6rem;"><span class="company-tag">供应链金融锚点</span>恒丰银行"恒银E链"之所以能给协创数据的供应商放款，本质是看懂了核心企业的应付账期（DPO）和供应商的应收质量（DSO）——CCC拆解就是银行做供应链金融定价的风控依据。</p>
+                <p><span class="company-tag">ROE底层驱动</span>杜邦分析中"总资产周转率"的底层就是营运资本效率：台积电CCC最短→资产周转最快→ROE更高；浪潮信息CCC长→资金积压→需要更多外部融资→权益乘数高但ROE仍低。</p>
+            </div>
+            <p class="data-note">数据来源：各公司最新财报、GuruFocus、券商研报（截至2026年8月）<br>注：部分DPO为估算值，CCC为近似值，趋势比绝对值更有参考意义</p>
+        </div>
+
+        <div class="card">
+            <h3>💰 算力企业预算管理模型（交互演示）</h3>
+            <p style="font-size:0.85rem;color:#64748b;margin-bottom:1rem;">模拟一个年营收10亿元的AI算力企业，调整参数查看预算分解与自由现金流。</p>
+            <div class="calc-section">
+                <div class="calc-row">
+                    <label>年营收（亿元）：</label>
+                    <input type="number" id="revInput" value="10" step="1" style="width:100px;">
+                </div>
+                <div class="calc-row">
+                    <label>毛利率（%）：</label>
+                    <input type="number" id="gmInput" value="25" step="1" style="width:100px;">
+                </div>
+                <div class="calc-row">
+                    <label>资本开支占营收比（%）：</label>
+                    <input type="number" id="capexRatioInput" value="40" step="5" style="width:100px;">
+                </div>
+                <div class="calc-row">
+                    <label>运营费用率（%）：</label>
+                    <input type="number" id="opexRatioInput" value="20" step="1" style="width:100px;">
+                </div>
+                <button class="btn-primary" onclick="runBudgetModel()" style="margin-top:0.5rem;">计算预算分解</button>
+                <div id="budgetResult" class="calc-result" style="display:none;"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>📈 AI财务六大趋势（WAIC 2026蓝皮书）</h3>
+            <div style="font-size:0.9rem;color:#475569;line-height:1.8;">
+                <p>1. 企业财务智能化认知持续深化，但<strong>"高普及、低深耕"</strong>特征明显（仅10.87%实现全面智能化）。</p>
+                <p>2. 业财融合的理想与现实落差凸显，<strong>组织协同</strong>是最大阻碍。</p>
+                <p>3. 财务领域对大模型技术态度从<strong>观望转向积极</strong>。</p>
+                <p>4. 智能化转型呈现<strong>"马太效应"</strong>，头部企业投入持续加大。</p>
+                <p>5. 政策法规驱动智能财务普及，<strong>数据资产与AI合规</strong>成为新焦点。</p>
+                <p>6. 财务团队正从流程自动化转向<strong>战略预测与价值决策</strong>。</p>
+            </div>
+            <p class="data-note">参考来源：上海国家会计学院《2026年中国企业财务智能化调查报告（蓝皮书）》（2026年7月19日发布）</p>
+        </div>
+
+        <div class="card">
+            <h3>🏦 银行端案例：恒丰银行深圳分行支持AI算力产业链</h3>
+            <div style="font-size:0.8rem;color:#64748b;margin-bottom:0.8rem;">案例时间：2025年7月31日 | 信息来源：21世纪经济报道</div>
+
+            <p style="font-size:0.9rem;color:#475569;line-height:1.7;margin-bottom:1rem;">
+                恒丰银行深圳分行围绕AI算力产业链搭建专项金融服务体系，向产业链多家企业投放信贷资金，并通过供应链金融产品"恒银E链"向核心企业供应商延伸授信。
+            </p>
+
+            <div class="metric-cards">
+                <div class="metric-card" style="border-top:3px solid #3b82f6;">
+                    <div class="metric-value" style="color:#3b82f6;">1亿</div>
+                    <div class="metric-label">天顿数据<br><small>信贷投放</small></div>
+                </div>
+                <div class="metric-card" style="border-top:3px solid #8b5cf6;">
+                    <div class="metric-value" style="color:#8b5cf6;">5000万</div>
+                    <div class="metric-label">神州数码（深圳）<br><small>贷款发放</small></div>
+                </div>
+                <div class="metric-card" style="border-top:3px solid #10b981;">
+                    <div class="metric-value" style="color:#10b981;">2亿</div>
+                    <div class="metric-label">协创数据<br><small>信贷投放</small></div>
+                </div>
+                <div class="metric-card" style="border-top:3px solid #f59e0b;">
+                    <div class="metric-value" style="color:#f59e0b;">3610万</div>
+                    <div class="metric-label">恒银E链<br><small>供应商应收账款融资</small></div>
+                </div>
+            </div>
+
+            <div class="chart-box" style="margin-top:1rem;">
+                <canvas id="hengfengChart"></canvas>
+            </div>
+
+            <div class="insight-card" style="background:#f0fdf4;border-left-color:#10b981;margin-top:1rem;">
+                <strong>财务BP视角解读</strong><br><br>
+                <p style="margin-bottom:0.6rem;"><span class="company-tag">产业链逻辑</span>银行已识别AI算力为高景气赛道，愿意围绕产业链做系统性信贷布局，而非单一项目贷款。</p>
+                <p style="margin-bottom:0.6rem;"><span class="company-tag">风控逻辑</span>核心企业（协创数据）获得大额授信后，通过"恒银E链"将信用延伸至上游供应商——银行基于核心企业信用做反向保理，降低信息不对称风险。</p>
+                <p style="margin-bottom:0.6rem;"><span class="company-tag">产品设计</span>"恒银E链"本质是供应链应收账款融资，银行用核心企业信用替代供应商信用，使中小企业可获得低成本资金。</p>
+                <p><span class="company-tag">生态视角</span>财务BP需理解：算力产业链融资已从"点对点贷款"演进为"链式金融服务"，银行在产业链中扮演资金配置+信用增信双重角色。</p>
+            </div>
+
+            <p class="data-note">案例来源：21世纪经济报道（2025年7月31日）| 金额单位：人民币</p>
         </div>
     </div>
 </div>
 
 <script>
-    // ---------- 数据 ----------
-    let records = [];  // 每项 { text, amount, type, category, timestamp }
-    let currentRange = "month";
-    let monthlyBudget = 5000;
-    let trendChart = null;
+// ========== Tab 切换 ==========
+function switchTab(tabName) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    event.target.classList.add('active');
+    document.getElementById(tabName + '-tab').classList.add('active');
+    if (tabName === 'industry') renderIndustryCharts();
+}
 
-    // 财务金句库（第一句已修改）
-    const quotes = [
-        "💡 钱是手段，不是目的。",
-        "💡 存钱不是为了压抑欲望，而是为了在关键时刻有选择权。",
-        "💡 买得起是能力，配得上才是智慧。",
-        "💡 财务自由不是拥有很多钱，而是有能力拒绝不想做的事。",
-        "💡 记账不是为了焦虑，而是为了更安心地花钱。",
-        "💡 最好的投资是提升自己，回报率无穷大。",
-        "💡 预算不是束缚，是你对未来的邀请。",
-        "💡 年轻就是最大的资本。"
-    ];
+// ========== 个人财务助手 ==========
+let records = JSON.parse(localStorage.getItem('finance_records') || '[]');
+let currentRange = "month";
+let monthlyBudget = parseFloat(localStorage.getItem('finance_budget') || '5000');
+let trendChart = null;
 
-    function updateQuote() {
-        const randomIndex = Math.floor(Math.random() * quotes.length);
-        document.getElementById('quoteText').innerText = quotes[randomIndex];
-    }
+const quotes = [
+    "💡 钱是手段，不是目的。",
+    "💡 存钱不是为了压抑欲望，而是为了在关键时刻有选择权。",
+    "💡 买得起是能力，配得上才是智慧。",
+    "💡 财务自由不是拥有很多钱，而是有能力拒绝不想做的事。",
+    "💡 记账不是为了焦虑，而是为了更安心地花钱。",
+    "💡 最好的投资是提升自己，回报率无穷大。",
+    "💡 预算不是束缚，是你对未来的邀请。",
+    "💡 年轻就是最大的资本。"
+];
 
-    // 初始化日期选择器为今天
-    function setDefaultDate() {
-        const today = new Date();
-        const yyyy = today.getFullYear();
-        const mm = String(today.getMonth() + 1).padStart(2, '0');
-        const dd = String(today.getDate()).padStart(2, '0');
-        document.getElementById('recordDate').value = `${yyyy}-${mm}-${dd}`;
-    }
+function updateQuote() {
+    const randomIndex = Math.floor(Math.random() * quotes.length);
+    document.getElementById('quoteText').innerText = quotes[randomIndex];
+}
 
-    // 提取金额
-    function extractAmount(text) {
-        const match = text.match(/\d+(?:\.\d+)?/);
-        return match ? parseFloat(match[0]) : 0;
-    }
+function setDefaultDate() {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    document.getElementById('recordDate').value = `${yyyy}-${mm}-${dd}`;
+}
 
-    // 简单分类（仅支出）
-    function getCategory(text) {
-        const lower = text.toLowerCase();
-        if (lower.includes('饭') || lower.includes('餐') || lower.includes('早餐') || lower.includes('午餐') || lower.includes('晚餐') ||
-            lower.includes('奶茶') || lower.includes('咖啡') || lower.includes('外卖')) return "餐饮";
-        if (lower.includes('买') || lower.includes('购物') || lower.includes('淘宝') || lower.includes('京东') || lower.includes('书')) return "购物";
-        if (lower.includes('车') || lower.includes('地铁') || lower.includes('公交') || lower.includes('滴滴') || lower.includes('打车')) return "交通";
-        if (lower.includes('电影') || lower.includes('游戏') || lower.includes('门票')) return "娱乐";
-        return "其他";
-    }
+function extractAmount(text) {
+    const match = text.match(/\d+(?:\.\d+)?/);
+    return match ? parseFloat(match[0]) : 0;
+}
 
-    // 添加记录（支持自定义日期）
-    function addRecord(rawInput, type, customDateStr = null) {
-        if (!rawInput.trim()) return;
-        const parts = rawInput.replace(/，/g, ',').split(',');
-        let added = 0;
-        for (let part of parts) {
-            part = part.trim();
-            if (!part) continue;
-            const amount = extractAmount(part);
-            if (amount === 0) {
-                alert(`无法识别金额：${part}`);
-                continue;
+function getCategory(text) {
+    const lower = text.toLowerCase();
+    if (lower.includes('饭') || lower.includes('餐') || lower.includes('早餐') || lower.includes('午餐') || lower.includes('晚餐') ||
+        lower.includes('奶茶') || lower.includes('咖啡') || lower.includes('外卖')) return "餐饮";
+    if (lower.includes('买') || lower.includes('购物') || lower.includes('淘宝') || lower.includes('京东') || lower.includes('书')) return "购物";
+    if (lower.includes('车') || lower.includes('地铁') || lower.includes('公交') || lower.includes('滴滴') || lower.includes('打车')) return "交通";
+    if (lower.includes('电影') || lower.includes('游戏') || lower.includes('门票')) return "娱乐";
+    return "其他";
+}
+
+function addRecord(rawInput, type, customDateStr = null) {
+    if (!rawInput.trim()) return;
+    const parts = rawInput.replace(/，/g, ',').split(',');
+    let added = 0;
+    for (let part of parts) {
+        part = part.trim();
+        if (!part) continue;
+        const amount = extractAmount(part);
+        if (amount === 0) { alert(`无法识别金额：${part}`); continue; }
+        let timestamp;
+        if (customDateStr) {
+            const date = new Date(customDateStr);
+            if (isNaN(date.getTime())) { timestamp = Date.now(); }
+            else {
+                const now = new Date();
+                date.setHours(now.getHours(), now.getMinutes(), now.getSeconds());
+                timestamp = date.getTime();
             }
-            let timestamp;
-            if (customDateStr) {
-                const date = new Date(customDateStr);
-                if (isNaN(date.getTime())) {
-                    timestamp = Date.now();
-                } else {
-                    // 保留当前时间的时分秒，避免同一天记录顺序混乱
-                    const now = new Date();
-                    date.setHours(now.getHours(), now.getMinutes(), now.getSeconds());
-                    timestamp = date.getTime();
-                }
-            } else {
-                timestamp = Date.now();
-            }
-            const category = (type === 'expense') ? getCategory(part) : "收入";
-            records.push({
-                text: part,
-                amount: amount,
-                type: type,
-                category: category,
-                timestamp: timestamp
-            });
-            added++;
-        }
-        if (added) render();
+        } else { timestamp = Date.now(); }
+        const category = (type === 'expense') ? getCategory(part) : "收入";
+        records.push({ text: part, amount: amount, type: type, category: category, timestamp: timestamp });
+        added++;
     }
+    if (added) { saveData(); render(); }
+}
 
-    // 日期筛选
-    function isSameDay(ts, date) { const d = new Date(ts); return d.toDateString() === date.toDateString(); }
-    function isSameWeek(ts, base) { const d = new Date(ts); const start = new Date(base); start.setDate(base.getDate() - base.getDay()); start.setHours(0,0,0,0); const end = new Date(start); end.setDate(start.getDate()+6); return d >= start && d <= end; }
-    function isSameMonth(ts, base) { const d = new Date(ts); return d.getMonth() === base.getMonth() && d.getFullYear() === base.getFullYear(); }
-    function getFiltered() {
-        const now = new Date();
-        if (currentRange === "today") return records.filter(r => isSameDay(r.timestamp, now));
-        if (currentRange === "week") return records.filter(r => isSameWeek(r.timestamp, now));
-        if (currentRange === "month") return records.filter(r => isSameMonth(r.timestamp, now));
-        return [...records];
+function isSameDay(ts, date) { const d = new Date(ts); return d.toDateString() === date.toDateString(); }
+function isSameWeek(ts, base) { const d = new Date(ts); const start = new Date(base); start.setDate(base.getDate() - base.getDay()); start.setHours(0,0,0,0); const end = new Date(start); end.setDate(start.getDate()+6); end.setHours(23,59,59,999); return d >= start && d <= end; }
+function isSameMonth(ts, base) { const d = new Date(ts); return d.getMonth() === base.getMonth() && d.getFullYear() === base.getFullYear(); }
+
+function getFiltered() {
+    const now = new Date();
+    if (currentRange === "today") return records.filter(r => isSameDay(r.timestamp, now));
+    if (currentRange === "week") return records.filter(r => isSameWeek(r.timestamp, now));
+    if (currentRange === "month") return records.filter(r => isSameMonth(r.timestamp, now));
+    return [...records];
+}
+
+function saveData() {
+    localStorage.setItem('finance_records', JSON.stringify(records));
+    localStorage.setItem('finance_budget', monthlyBudget.toString());
+}
+
+function render() {
+    const filtered = getFiltered();
+    let totalIncome = 0, totalExpense = 0;
+    filtered.forEach(r => { if (r.type === 'income') totalIncome += r.amount; else totalExpense += r.amount; });
+    const balance = totalIncome - totalExpense;
+    document.getElementById('totalIncome').innerText = totalIncome.toFixed(2);
+    document.getElementById('totalExpense').innerText = totalExpense.toFixed(2);
+    const balanceSpan = document.getElementById('balance');
+    balanceSpan.innerText = balance.toFixed(2);
+    balanceSpan.className = `stats-number ${balance >= 0 ? 'balance-positive' : 'balance-negative'}`;
+
+    const now = new Date();
+    const currentMonthExpense = records.filter(r => r.type === 'expense' && isSameMonth(r.timestamp, now))
+                                        .reduce((s,r) => s + r.amount, 0);
+    const percent = Math.min(100, (currentMonthExpense / monthlyBudget) * 100);
+    const fillDiv = document.getElementById('budgetFill');
+    fillDiv.style.width = `${percent}%`;
+    fillDiv.innerText = `${Math.round(percent)}%`;
+    fillDiv.style.background = percent > 100 ? "#ef4444" : "#3b82f6";
+
+    const last7Days = [];
+    const dayExpense = {};
+    for (let i = 6; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        const key = `${d.getMonth()+1}/${d.getDate()}`;
+        last7Days.push(key);
+        dayExpense[key] = 0;
     }
-
-    // 渲染所有UI
-    function render() {
-        const filtered = getFiltered();
-        // 统计收入支出
-        let totalIncome = 0, totalExpense = 0;
-        filtered.forEach(r => {
-            if (r.type === 'income') totalIncome += r.amount;
-            else totalExpense += r.amount;
-        });
-        const balance = totalIncome - totalExpense;
-        document.getElementById('totalIncome').innerText = totalIncome.toFixed(2);
-        document.getElementById('totalExpense').innerText = totalExpense.toFixed(2);
-        const balanceSpan = document.getElementById('balance');
-        balanceSpan.innerText = balance.toFixed(2);
-        balanceSpan.className = `stats-number ${balance >= 0 ? 'balance-positive' : 'balance-negative'}`;
-
-        // 预算进度条（基于本月支出）
-        const now = new Date();
-        const currentMonthExpense = records.filter(r => r.type === 'expense' && isSameMonth(r.timestamp, now))
-                                            .reduce((s,r) => s + r.amount, 0);
-        const percent = Math.min(100, (currentMonthExpense / monthlyBudget) * 100);
-        const fillDiv = document.getElementById('budgetFill');
-        fillDiv.style.width = `${percent}%`;
-        fillDiv.innerText = `${Math.round(percent)}%`;
-        fillDiv.style.background = percent > 100 ? "#ef4444" : "#3b82f6";
-
-        // 近7天趋势图
-        const last7Days = [];
-        const dayExpense = {};
-        for (let i = 6; i >= 0; i--) {
-            const d = new Date();
-            d.setDate(d.getDate() - i);
-            const key = `${d.getMonth()+1}/${d.getDate()}`;
-            last7Days.push(key);
-            dayExpense[key] = 0;
-        }
-        records.forEach(r => {
-            if (r.type !== 'expense') return;
-            const d = new Date(r.timestamp);
-            const key = `${d.getMonth()+1}/${d.getDate()}`;
-            if (dayExpense.hasOwnProperty(key)) dayExpense[key] += r.amount;
-        });
-        const expenseData = last7Days.map(day => dayExpense[day]);
-        if (trendChart) trendChart.destroy();
-        const ctx = document.getElementById('trendChart').getContext('2d');
-        trendChart = new Chart(ctx, {
-            type: 'line',
-            data: { labels: last7Days, datasets: [{ label: '支出 (元)', data: expenseData, borderColor: '#ef4444', tension: 0.2, fill: false }] },
-            options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'top' } } }
-        });
-
-        // 洞察卡片
-        let insight = "";
-        if (filtered.length === 0) insight = "添加记录后，将显示财务洞察。";
-        else {
-            if (balance < 0) insight = "⚠️ 本期结余为负，建议控制支出。";
-            else if (balance < totalIncome * 0.1 && totalIncome > 0) insight = "📉 结余率偏低，注意储蓄。";
-            else insight = "✅ 财务状况良好，继续保持。";
-            if (currentMonthExpense > monthlyBudget) insight += " 本月支出已超出总预算！";
-        }
-        document.getElementById('insightCard').innerHTML = `📌 ${insight}`;
-
-        // 渲染记录列表
-        const listDiv = document.getElementById('recordList');
-        if (filtered.length === 0) listDiv.innerHTML = '<div style="color:#94a3b8;">暂无记录</div>';
-        else {
-            listDiv.innerHTML = filtered.map(r => {
-                const amountClass = r.type === 'income' ? 'income-amount' : 'expense-amount';
-                const sign = r.type === 'income' ? '+ ' : '- ';
-                const dateStr = new Date(r.timestamp).toLocaleDateString();
-                return `<div class="record-item">
-                    <div><span class="record-cat">${r.category}</span> ${r.text} <span style="font-size:0.7rem; color:#94a3b8;">${dateStr}</span></div>
-                    <div class="${amountClass}">${sign}¥${r.amount.toFixed(2)}</div>
-                </div>`;
-            }).join('');
-        }
-    }
-
-    // 导出CSV
-    function exportCSV() {
-        if (!records.length) { alert("无数据可导出"); return; }
-        const rows = [["日期","原文","分类","类型","金额"]];
-        records.forEach(r => {
-            rows.push([new Date(r.timestamp).toLocaleDateString(), r.text, r.category, r.type === 'income' ? '收入' : '支出', r.amount]);
-        });
-        const csv = rows.map(row => row.join(",")).join("\n");
-        const blob = new Blob(["\uFEFF" + csv], {type: "text/csv"});
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = `finance_${new Date().toISOString().slice(0,19)}.csv`;
-        a.click();
-        URL.revokeObjectURL(a.href);
-    }
-
-    function resetAll() { if(confirm("清空所有数据？")) { records = []; render(); } }
-
-    // 事件绑定
-    document.getElementById('addExpenseBtn').onclick = () => {
-        const input = document.getElementById('recordInput');
-        const dateVal = document.getElementById('recordDate').value;
-        addRecord(input.value, 'expense', dateVal);
-        input.value = '';
-        setDefaultDate(); // 重置日期为今天
-    };
-    document.getElementById('addIncomeBtn').onclick = () => {
-        const input = document.getElementById('recordInput');
-        const dateVal = document.getElementById('recordDate').value;
-        addRecord(input.value, 'income', dateVal);
-        input.value = '';
-        setDefaultDate();
-    };
-    document.getElementById('exportBtn').onclick = exportCSV;
-    document.getElementById('resetBtn').onclick = resetAll;
-    document.getElementById('setBudgetBtn').onclick = () => {
-        const val = parseFloat(document.getElementById('budgetInput').value);
-        if (!isNaN(val) && val > 0) monthlyBudget = val;
-        render();
-    };
-    document.getElementById('refreshQuoteBtn').onclick = updateQuote;
-
-    document.querySelectorAll('[data-range]').forEach(btn => {
-        btn.onclick = () => {
-            currentRange = btn.dataset.range;
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            render();
-        };
+    records.forEach(r => {
+        if (r.type !== 'expense') return;
+        const d = new Date(r.timestamp);
+        const key = `${d.getMonth()+1}/${d.getDate()}`;
+        if (dayExpense.hasOwnProperty(key)) dayExpense[key] += r.amount;
+    });
+    const expenseData = last7Days.map(day => dayExpense[day]);
+    if (trendChart) trendChart.destroy();
+    const ctx = document.getElementById('trendChart').getContext('2d');
+    trendChart = new Chart(ctx, {
+        type: 'line',
+        data: { labels: last7Days, datasets: [{ label: '支出 (元)', data: expenseData, borderColor: '#ef4444', tension: 0.2, fill: false }] },
+        options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'top' } } }
     });
 
-    document.getElementById('recordInput').onkeypress = (e) => {
-        if (e.key === 'Enter') document.getElementById('addExpenseBtn').click();
-    };
+    let insight = "";
+    if (filtered.length === 0) insight = "添加记录后，将显示财务洞察。";
+    else {
+        if (balance < 0) insight = "⚠️ 本期结余为负，建议控制支出。";
+        else if (balance < totalIncome * 0.1 && totalIncome > 0) insight = "📉 结余率偏低，注意储蓄。";
+        else insight = "✅ 财务状况良好，继续保持。";
+        if (currentMonthExpense > monthlyBudget) insight += " 本月支出已超出总预算！";
+    }
+    document.getElementById('insightCard').innerHTML = `📌 ${insight}`;
 
-    // 初始化
-    setDefaultDate();
-    // 示例数据
-    (function init() {
-        const now = new Date();
-        records.push({ text: "早餐8.5元", amount: 8.5, type: 'expense', category: "餐饮", timestamp: now.getTime() });
-        records.push({ text: "地铁5元", amount: 5, type: 'expense', category: "交通", timestamp: now.getTime() });
-        records.push({ text: "工资5000元", amount: 5000, type: 'income', category: "收入", timestamp: now.getTime() });
-        const yesterday = new Date(now); yesterday.setDate(now.getDate()-1);
-        records.push({ text: "购书49元", amount: 49, type: 'expense', category: "购物", timestamp: yesterday.getTime() });
+    const listDiv = document.getElementById('recordList');
+    if (filtered.length === 0) listDiv.innerHTML = '<div style="color:#94a3b8;">暂无记录</div>';
+    else {
+        listDiv.innerHTML = filtered.sort((a,b) => b.timestamp - a.timestamp).map(r => {
+            const amountClass = r.type === 'income' ? 'income-amount' : 'expense-amount';
+            const sign = r.type === 'income' ? '+ ' : '- ';
+            const dateStr = new Date(r.timestamp).toLocaleDateString();
+            return `<div class="record-item">
+                <div><span class="record-cat">${r.category}</span> ${r.text} <span style="font-size:0.7rem; color:#94a3b8;">${dateStr}</span></div>
+                <div class="${amountClass}">${sign}¥${r.amount.toFixed(2)}</div>
+            </div>`;
+        }).join('');
+    }
+}
+
+function exportCSV() {
+    if (!records.length) { alert("无数据可导出"); return; }
+    const rows = [["日期","原文","分类","类型","金额"]];
+    records.forEach(r => {
+        rows.push([new Date(r.timestamp).toLocaleDateString(), r.text, r.category, r.type === 'income' ? '收入' : '支出', r.amount]);
+    });
+    const csv = rows.map(row => row.join(",")).join("\n");
+    const blob = new Blob(["\uFEFF" + csv], {type: 'text/csv;charset=utf-8;'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `财务记录_${new Date().toLocaleDateString()}.csv`;
+    a.click();
+}
+
+// ========== AI算力产业链图表 ==========
+let industryChartsRendered = false;
+let marginChart = null, capexChart = null, cashflowRadar = null, roeChart = null, hengfengChart = null, cccChart = null;
+
+function renderIndustryCharts() {
+    if (industryChartsRendered) return;
+    industryChartsRendered = true;
+
+    // 毛利率对比柱状图 - 基于真实财报数据
+    const marginCtx = document.getElementById('marginChart').getContext('2d');
+    marginChart = new Chart(marginCtx, {
+        type: 'bar',
+        data: {
+            labels: ['芯片设计\n(英伟达)', 'HBM存储\n(SK海力士)', '晶圆制造\n(台积电)', '服务器制造\n(浪潮信息)', '数据中心\n(Equinix)', '云服务\n(AWS)'],
+            datasets: [{
+                label: '毛利率 (%)',
+                data: [75.0, 83, 67.7, 4.88, 48, 33],
+                backgroundColor: ['#3b82f6', '#8b5cf6', '#06b6d4', '#ef4444', '#f59e0b', '#10b981'],
+                borderRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.parsed.y + '%' } } },
+            scales: { y: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } } }
+        }
+    });
+
+    // ROE杜邦拆解柱状图
+    const roeCtx = document.getElementById('roeChart').getContext('2d');
+    roeChart = new Chart(roeCtx, {
+        type: 'bar',
+        data: {
+            labels: ['英伟达', '台积电', 'SK海力士', '美光', 'AMD', '浪潮信息'],
+            datasets: [{
+                label: 'ROE (%)',
+                data: [101.5, 35.2, 31.1, 22, 7.8, 11.6],
+                backgroundColor: ['#3b82f6', '#06b6d4', '#8b5cf6', '#a855f7', '#f59e0b', '#94a3b8'],
+                borderRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.parsed.y + '%' } } },
+            scales: { y: { beginAtZero: true, max: 120, ticks: { callback: v => v + '%' } } }
+        }
+    });
+
+    // 资本开支趋势 - 2025实际 vs 2026E
+    const capexCtx = document.getElementById('capexChart').getContext('2d');
+    capexChart = new Chart(capexCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Alphabet', 'Amazon', 'Microsoft', 'Meta'],
+            datasets: [
+                { label: '2025实际', data: [914, 1318, 557, 722], backgroundColor: '#94a3b8', borderRadius: 6 },
+                { label: '2026E指引', data: [1800, 2000, 1900, 1350], backgroundColor: '#3b82f6', borderRadius: 6 }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { position: 'top' } },
+            scales: { y: { ticks: { callback: v => '$' + v + '亿' } } }
+        }
+    });
+
+    // 现金流健康度雷达图
+    const radarCtx = document.getElementById('cashflowRadar').getContext('2d');
+    cashflowRadar = new Chart(radarCtx, {
+        type: 'radar',
+        data: {
+            labels: ['经营现金流', '自由现金流', '资本回报率', '库存周转', '债务覆盖'],
+            datasets: [
+                { label: '芯片设计层', data: [95, 90, 95, 75, 90], borderColor: '#3b82f6', backgroundColor: 'rgba(59,130,246,0.2)' },
+                { label: 'HBM存储层', data: [90, 85, 85, 70, 80], borderColor: '#8b5cf6', backgroundColor: 'rgba(139,92,246,0.2)' },
+                { label: '服务器制造层', data: [55, 30, 35, 50, 50], borderColor: '#ef4444', backgroundColor: 'rgba(239,68,68,0.2)' },
+                { label: '云服务层', data: [70, 35, 55, 75, 65], borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.2)' }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: { r: { min: 0, max: 100, ticks: { stepSize: 20 } } }
+        }
+    });
+
+    // 恒丰银行案例 - 信贷投放结构图
+    const hfCtx = document.getElementById('hengfengChart').getContext('2d');
+    hengfengChart = new Chart(hfCtx, {
+        type: 'bar',
+        data: {
+            labels: ['天顿数据', '神州数码(深圳)', '协创数据', '恒银E链(供应商)'],
+            datasets: [{
+                label: '授信金额（万元）',
+                data: [10000, 5000, 20000, 3610],
+                backgroundColor: ['#3b82f6', '#8b5cf6', '#10b981', '#f59e0b'],
+                borderRadius: 8
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                tooltip: { callbacks: { label: ctx => ctx.parsed.x.toLocaleString() + ' 万元' } }
+            },
+            scales: { x: { beginAtZero: true, ticks: { callback: v => v.toLocaleString() + '万' } } }
+        }
+    });
+
+    // 营运资本效率（现金转换周期）堆叠柱状图
+    const cccCtx = document.getElementById('cccChart').getContext('2d');
+    cccChart = new Chart(cccCtx, {
+        type: 'bar',
+        data: {
+            labels: ['台积电', '英伟达', '浪潮信息', 'SK海力士'],
+            datasets: [
+                { label: '应收账款周转天数', data: [26, 45, 37, 45], backgroundColor: '#3b82f6', borderRadius: 4 },
+                { label: '存货周转天数', data: [80, 140, 139, 128], backgroundColor: '#f59e0b', borderRadius: 4 },
+                { label: '应付账款周转天数', data: [-30, -73, -60, -44], backgroundColor: '#10b981', borderRadius: 4 }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'top' },
+                tooltip: {
+                    callbacks: {
+                        label: function(ctx) {
+                            const val = Math.abs(ctx.parsed.y);
+                            return ctx.dataset.label + ': ' + val + '天';
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: { stacked: true },
+                y: {
+                    stacked: true,
+                    title: { display: true, text: '天数' },
+                    ticks: { callback: v => Math.abs(v) + '天' }
+                }
+            }
+        }
+    });
+}
+
+// 预算管理模型
+function runBudgetModel() {
+    const rev = parseFloat(document.getElementById('revInput').value) || 10;
+    const gm = parseFloat(document.getElementById('gmInput').value) || 25;
+    const capexRatio = parseFloat(document.getElementById('capexRatioInput').value) || 40;
+    const opexRatio = parseFloat(document.getElementById('opexRatioInput').value) || 20;
+
+    const grossProfit = rev * gm / 100;
+    const opex = rev * opexRatio / 100;
+    const capex = rev * capexRatio / 100;
+    const ebitda = grossProfit - opex;
+    const fcf = ebitda - capex;
+    const fcfMargin = (fcf / rev * 100).toFixed(1);
+
+    const resultDiv = document.getElementById('budgetResult');
+    resultDiv.style.display = 'block';
+    resultDiv.innerHTML = `
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;">
+            <div><div style="font-size:0.75rem;color:#64748b;">毛利润</div><div style="font-size:1.2rem;font-weight:700;color:#0f172a;">${grossProfit.toFixed(2)}亿</div></div>
+            <div><div style="font-size:0.75rem;color:#64748b;">运营费用</div><div style="font-size:1.2rem;font-weight:700;color:#ef4444;">${opex.toFixed(2)}亿</div></div>
+            <div><div style="font-size:0.75rem;color:#64748b;">EBITDA</div><div style="font-size:1.2rem;font-weight:700;color:#3b82f6;">${ebitda.toFixed(2)}亿</div></div>
+            <div><div style="font-size:0.75rem;color:#64748b;">资本开支</div><div style="font-size:1.2rem;font-weight:700;color:#f59e0b;">${capex.toFixed(2)}亿</div></div>
+            <div><div style="font-size:0.75rem;color:#64748b;">自由现金流</div><div style="font-size:1.2rem;font-weight:700;color:${fcf>=0?'#10b981':'#ef4444'};">${fcf.toFixed(2)}亿</div></div>
+            <div><div style="font-size:0.75rem;color:#64748b;">FCF利润率</div><div style="font-size:1.2rem;font-weight:700;color:${fcf>=0?'#10b981':'#ef4444'};">${fcfMargin}%</div></div>
+        </div>
+        <div style="margin-top:0.8rem;font-size:0.85rem;color:#475569;">
+            ${fcf < 0 ? '⚠️ <strong>自由现金流为负</strong>：企业处于高速扩张期，需关注融资能力与资本开支回报周期（参考当前云服务厂商状态）。' : '✅ <strong>自由现金流为正</strong>：企业具备自我造血能力，财务状况稳健（参考芯片设计层企业）。'}
+        </div>
+    `;
+}
+
+// ========== 事件绑定 & 初始化 ==========
+document.getElementById('addExpenseBtn').addEventListener('click', () => {
+    const input = document.getElementById('recordInput').value;
+    const date = document.getElementById('recordDate').value;
+    addRecord(input, 'expense', date);
+    document.getElementById('recordInput').value = '';
+});
+document.getElementById('addIncomeBtn').addEventListener('click', () => {
+    const input = document.getElementById('recordInput').value;
+    const date = document.getElementById('recordDate').value;
+    addRecord(input, 'income', date);
+    document.getElementById('recordInput').value = '';
+});
+document.getElementById('exportBtn').addEventListener('click', exportCSV);
+document.getElementById('resetBtn').addEventListener('click', () => {
+    if (confirm('确定清空所有数据？')) { records = []; saveData(); render(); }
+});
+document.getElementById('setBudgetBtn').addEventListener('click', () => {
+    monthlyBudget = parseFloat(document.getElementById('budgetInput').value) || 5000;
+    saveData(); render();
+});
+document.getElementById('refreshQuoteBtn').addEventListener('click', updateQuote);
+document.getElementById('filterGroup').addEventListener('click', (e) => {
+    if (e.target.classList.contains('filter-btn')) {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        currentRange = e.target.dataset.range;
         render();
-        updateQuote();
-    })();
+    }
+});
+
+setDefaultDate();
+document.getElementById('budgetInput').value = monthlyBudget;
+render();
+updateQuote();
 </script>
 </body>
 </html>
