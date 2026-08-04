@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -761,37 +761,38 @@ function renderIndustryCharts() {
         }
     });
 
-    // 营运资本效率（现金转换周期）堆叠柱状图
+    // 营运资本效率（现金转换周期）分组横向柱状图
     const cccCtx = document.getElementById('cccChart').getContext('2d');
     cccChart = new Chart(cccCtx, {
         type: 'bar',
         data: {
             labels: ['台积电', '英伟达', '浪潮信息', 'SK海力士'],
             datasets: [
-                { label: '应收账款周转天数', data: [26, 45, 37, 45], backgroundColor: '#3b82f6', borderRadius: 4 },
-                { label: '存货周转天数', data: [80, 140, 139, 128], backgroundColor: '#f59e0b', borderRadius: 4 },
-                { label: '应付账款周转天数', data: [-30, -73, -60, -44], backgroundColor: '#10b981', borderRadius: 4 }
+                { label: '应收天数(DSO)', data: [26, 45, 37, 45], backgroundColor: '#3b82f6', borderRadius: 4 },
+                { label: '存货天数(DIO)', data: [80, 140, 139, 128], backgroundColor: '#f59e0b', borderRadius: 4 },
+                { label: '应付天数(DPO)', data: [30, 73, 60, 44], backgroundColor: '#10b981', borderRadius: 4 },
+                { label: 'CCC(现金转换周期)', data: [76, 112, 116, 129], backgroundColor: '#ef4444', borderRadius: 4 }
             ]
         },
         options: {
+            indexAxis: 'y',
             responsive: true,
             plugins: {
                 legend: { position: 'top' },
                 tooltip: {
                     callbacks: {
                         label: function(ctx) {
-                            const val = Math.abs(ctx.parsed.y);
-                            return ctx.dataset.label + ': ' + val + '天';
+                            return ctx.dataset.label + ': ' + ctx.parsed.x + '天';
                         }
                     }
                 }
             },
             scales: {
-                x: { stacked: true },
-                y: {
-                    stacked: true,
+                x: {
+                    beginAtZero: true,
+                    max: 160,
                     title: { display: true, text: '天数' },
-                    ticks: { callback: v => Math.abs(v) + '天' }
+                    ticks: { callback: v => v + '天' }
                 }
             }
         }
