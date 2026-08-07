@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -128,8 +128,10 @@
             gap: 1.5rem;
             margin: 1rem 0;
         }
-        .chart-box { background: #f8fafc; border-radius: 1rem; padding: 1rem; border: 1px solid #e2e8f0; }
+        .chart-box { background: #f8fafc; border-radius: 1rem; padding: 1rem; border: 1px solid #e2e8f0; position: relative; }
         .chart-box canvas { max-height: 250px; }
+        .chart-box-tall { height: 320px; }
+        .chart-box-tall canvas { max-height: 300px; }
         .calc-section {
             background: #f0f9ff;
             border-radius: 1rem;
@@ -370,7 +372,7 @@
                 <strong>CCC = 应收账款周转天数 + 存货周转天数 - 应付账款周转天数</strong><br>
                 <span style="font-size:0.8rem;">现金转换周期：衡量企业从投入资金采购到收回销售现金所需的平均天数，越短代表资金周转效率越高</span>
             </div>
-            <div class="chart-box">
+            <div class="chart-box chart-box-tall">
                 <canvas id="cccChart"></canvas>
             </div>
             <div style="font-size:0.85rem;color:#475569;line-height:1.7;margin-top:0.8rem;">
@@ -453,7 +455,7 @@
                 </div>
             </div>
 
-            <div class="chart-box" style="margin-top:1rem;">
+            <div class="chart-box chart-box-tall" style="margin-top:1rem;">
                 <canvas id="hengfengChart"></canvas>
             </div>
 
@@ -753,6 +755,7 @@ function renderIndustryCharts() {
         options: {
             indexAxis: 'y',
             responsive: true,
+            maintainAspectRatio: false,
             plugins: {
                 legend: { display: false },
                 tooltip: { callbacks: { label: ctx => ctx.parsed.x.toLocaleString() + ' 万元' } }
@@ -777,6 +780,7 @@ function renderIndustryCharts() {
         options: {
             indexAxis: 'y',
             responsive: true,
+            maintainAspectRatio: false,
             plugins: {
                 legend: { position: 'top' },
                 tooltip: {
@@ -805,6 +809,18 @@ function runBudgetModel() {
     const gm = parseFloat(document.getElementById('gmInput').value) || 25;
     const capexRatio = parseFloat(document.getElementById('capexRatioInput').value) || 40;
     const opexRatio = parseFloat(document.getElementById('opexRatioInput').value) || 20;
+
+    // 输入校验
+    const resultDiv = document.getElementById('budgetResult');
+    resultDiv.style.display = 'block';
+    if (rev <= 0) {
+        resultDiv.innerHTML = `<div style="color:#ef4444;font-weight:500;">⚠️ 年营收必须为正数，请重新输入。</div>`;
+        return;
+    }
+    if (gm < 0 || gm > 100 || opexRatio < 0 || opexRatio > 100 || capexRatio < 0 || capexRatio > 100) {
+        resultDiv.innerHTML = `<div style="color:#ef4444;font-weight:500;">⚠️ 比率请在 0%-100% 之间输入。</div>`;
+        return;
+    }
 
     const grossProfit = rev * gm / 100;
     const opex = rev * opexRatio / 100;
