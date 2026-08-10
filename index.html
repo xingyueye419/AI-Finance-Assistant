@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
+<html lang="zh-CN" data-immersive-translate-page-theme="light"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>智能财务助手 · AI算力产业链财务分析</title>
@@ -196,7 +195,7 @@
             color: #3730a3;
         }
     </style>
-</head>
+<style data-id="immersive-translate-input-injected-css"></style></head>
 <body>
 <div class="container">
     <!-- Tab 导航 -->
@@ -475,10 +474,13 @@
 <script>
 // ========== Tab 切换 ==========
 function switchTab(tabName) {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-    event.target.classList.add('active');
-    document.getElementById(tabName + '-tab').classList.add('active');
+    document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+    document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+    var btns = document.querySelectorAll('.tab-btn');
+    var idx = (tabName === 'personal') ? 0 : 1;
+    if (btns[idx]) btns[idx].classList.add('active');
+    var panel = document.getElementById(tabName + '-tab');
+    if (panel) panel.classList.add('active');
     if (tabName === 'industry') renderIndustryCharts();
 }
 
@@ -829,8 +831,6 @@ function runBudgetModel() {
     const fcf = ebitda - capex;
     const fcfMargin = (fcf / rev * 100).toFixed(1);
 
-    const resultDiv = document.getElementById('budgetResult');
-    resultDiv.style.display = 'block';
     resultDiv.innerHTML = `
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;">
             <div><div style="font-size:0.75rem;color:#64748b;">毛利润</div><div style="font-size:1.2rem;font-weight:700;color:#0f172a;">${grossProfit.toFixed(2)}亿</div></div>
@@ -882,5 +882,19 @@ document.getElementById('budgetInput').value = monthlyBudget;
 render();
 updateQuote();
 </script>
-</body>
-</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body></html>
+<!-- test write -->
