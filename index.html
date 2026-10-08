@@ -194,6 +194,69 @@
             background: #e0e7ff;
             color: #3730a3;
         }
+        /* 横向对比表 */
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            margin: 1rem 0;
+        }
+        .compare-table th, .compare-table td {
+            padding: 0.6rem 0.5rem;
+            text-align: center;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .compare-table th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #475569;
+            font-size: 0.8rem;
+        }
+        .compare-table td:first-child {
+            text-align: left;
+            font-weight: 500;
+            color: #0f172a;
+        }
+        .rank-1 { color: #10b981; font-weight: 700; }
+        .rank-2 { color: #3b82f6; font-weight: 600; }
+        .rank-3 { color: #8b5cf6; font-weight: 500; }
+        .rank-low { color: #ef4444; font-weight: 500; }
+        /* AI问答模块 */
+        .ai-qa-box {
+            background: linear-gradient(135deg, #f0f9ff, #faf5ff);
+            border-radius: 1rem;
+            padding: 1rem;
+            border: 1px solid #bae6fd;
+            margin-top: 1rem;
+        }
+        .ai-question-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .ai-q-btn {
+            background: white;
+            border: 1px solid #cbd5e1;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #475569;
+        }
+        .ai-q-btn:hover { background: #3b82f6; color: white; border-color: #3b82f6; }
+        .ai-q-btn.active { background: #3b82f6; color: white; border-color: #3b82f6; }
+        .ai-answer {
+            background: white;
+            border-radius: 0.8rem;
+            padding: 1rem;
+            font-size: 0.85rem;
+            color: #475569;
+            line-height: 1.7;
+            border-left: 3px solid #8b5cf6;
+        }
+        .ai-answer strong { color: #0f172a; }
     </style>
 <style data-id="immersive-translate-input-injected-css"></style></head>
 <body>
@@ -272,7 +335,7 @@
     <div id="industry-tab" class="tab-panel">
         <div class="card">
             <h1>🖥️ AI算力产业链财务分析</h1>
-            <div class="sub">财务BP视角 · 毛利率 · ROE杜邦拆解 · 资本开支 · 现金流 · 预算模型</div>
+            <div class="sub">财务BP视角 · 毛利率 · ROE杜邦拆解 · 资本开支 · 现金流 · CCC · 横向对比 · 预算模型 · AI分析</div>
 
             <h3 style="margin-top:1rem;">产业链全景</h3>
             <div class="chain-flow">
@@ -293,7 +356,7 @@
             <div class="metric-cards">
                 <div class="metric-card">
                     <div class="metric-value" style="color:#3b82f6;">75.0%</div>
-                    <div class="metric-label">英伟达毛利率<br><small>1Q FY2027 GAAP</small></div>
+                    <div class="metric-label">英伟达毛利率<br><small>2Q FY2027 GAAP</small></div>
                 </div>
                 <div class="metric-card">
                     <div class="metric-value" style="color:#8b5cf6;">83.0%</div>
@@ -315,7 +378,7 @@
             <div class="chart-box">
                 <canvas id="marginChart"></canvas>
             </div>
-            <p class="data-note">数据来源：各公司最新财报（英伟达1Q FY2027、台积电2Q26、SK海力士Q2 2026实际值、浪潮信息2025年报）<br>注：服务器制造环节毛利率极低，主要系价格竞争加剧及原材料成本上行</p>
+            <p class="data-note">数据来源：各公司最新财报（英伟达2Q FY2027、台积电2Q26、SK海力士Q2 2026实际值、浪潮信息2025年报）<br>注：服务器制造环节毛利率极低，主要系价格竞争加剧及原材料成本上行</p>
         </div>
 
         <div class="card">
@@ -328,7 +391,7 @@
                 <canvas id="roeChart"></canvas>
             </div>
             <div style="font-size:0.85rem;color:#475569;line-height:1.7;margin-top:0.8rem;">
-                <p><span class="company-tag">英伟达</span>ROE <strong>101.5%</strong>：Fabless轻资产模式 + CUDA生态护城河，净利率极高，是AI算力产业链回报最高的环节。</p>
+                <p><span class="company-tag">英伟达</span>ROE <strong>101.5%</strong>：2Q FY2027营收962亿美元（同比+106%），净利597亿美元（同比+126%），运营利润率66%。Fabless轻资产+CUDA生态护城河，净利率超62%，是AI算力产业链回报最高的环节。</p>
                 <p><span class="company-tag">台积电</span>ROE <strong>35.2%</strong>（TTM）：技术垄断带来定价权，净利率和资产周转率双高，资本回报稳健。</p>
                 <p><span class="company-tag">SK海力士</span>ROE <strong>31.1%</strong>：HBM供不应求推动毛利率跃升至83%，Q2 2026营业利润率76%，净利润创历史新高，利润质量极高。</p>
                 <p><span class="company-tag">美光</span>ROE <strong>~22%</strong>：存储周期复苏+AI需求驱动，Q2 FY2026经营现金流$119亿，自由现金流创新高。</p>
@@ -355,7 +418,7 @@
                 <div style="padding:1rem;">
                     <p style="font-size:0.9rem;color:#475569;line-height:1.6;">
                         <strong>财务BP解读：</strong><br><br>
-                        1. <strong>芯片设计层</strong>（英伟达）：毛利率75%+，经营现金流极强，ROE超100%。<span class="badge badge-green">极度健康</span><br><br>
+                        1. <strong>芯片设计层</strong>（英伟达）：2Q FY2027毛利率75%，净利率超62%，数据中心收入同比+117%，经营现金流极强，ROE超100%。<span class="badge badge-green">极度健康</span><br><br>
                         2. <strong>HBM/存储层</strong>（SK海力士/美光）：毛利率83%+，营业利润率76%，经营现金流大幅高于净利润，利润全是真金白银。<span class="badge badge-green">健康</span><br><br>
                         3. <strong>晶圆制造层</strong>（台积电）：毛利率67.7%，技术垄断带来稳定现金流， capex大但回报确定。<span class="badge badge-green">健康</span><br><br>
                         4. <strong>服务器制造层</strong>（浪潮信息）：毛利率仅4.88%，净利率1.46%，议价能力极弱，属于"辛苦钱"环节。<span class="badge badge-red">承压</span><br><br>
@@ -387,6 +450,94 @@
                 <p><span class="company-tag">ROE底层驱动</span>杜邦分析中"总资产周转率"的底层就是营运资本效率：台积电CCC最短→资产周转最快→ROE更高；浪潮信息CCC长→资金积压→需要更多外部融资→权益乘数高但ROE仍低。</p>
             </div>
             <p class="data-note">数据来源：各公司最新财报、GuruFocus、券商研报（截至2026年8月）<br>注：部分DPO为估算值，CCC为近似值，趋势比绝对值更有参考意义</p>
+        </div>
+
+        <div class="card">
+            <h3>📊 六大环节横向对比总表</h3>
+            <div style="overflow-x:auto;">
+                <table class="compare-table">
+                    <thead>
+                        <tr>
+                            <th>产业链环节</th>
+                            <th>代表企业</th>
+                            <th>毛利率</th>
+                            <th>ROE</th>
+                            <th>CCC(天)</th>
+                            <th>现金流</th>
+                            <th>综合评级</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>HBM存储</td>
+                            <td>SK海力士/美光</td>
+                            <td class="rank-1">83%</td>
+                            <td class="rank-2">31%</td>
+                            <td class="rank-2">~129</td>
+                            <td><span class="badge badge-green">健康</span></td>
+                            <td class="rank-1">★★★★★</td>
+                        </tr>
+                        <tr>
+                            <td>芯片设计</td>
+                            <td>英伟达/AMD</td>
+                            <td class="rank-2">75%</td>
+                            <td class="rank-1">101.5%</td>
+                            <td class="rank-2">~112</td>
+                            <td><span class="badge badge-green">极度健康</span></td>
+                            <td class="rank-1">★★★★★</td>
+                        </tr>
+                        <tr>
+                            <td>晶圆制造</td>
+                            <td>台积电</td>
+                            <td class="rank-3">67.7%</td>
+                            <td class="rank-2">35.2%</td>
+                            <td class="rank-1">~76</td>
+                            <td><span class="badge badge-green">健康</span></td>
+                            <td class="rank-2">★★★★☆</td>
+                        </tr>
+                        <tr>
+                            <td>数据中心</td>
+                            <td>Equinix等</td>
+                            <td class="rank-3">48%</td>
+                            <td>~15%</td>
+                            <td>—</td>
+                            <td><span class="badge badge-yellow">稳定</span></td>
+                            <td class="rank-3">★★★☆☆</td>
+                        </tr>
+                        <tr>
+                            <td>云服务</td>
+                            <td>AWS/Azure</td>
+                            <td class="rank-3">33%</td>
+                            <td>~20%</td>
+                            <td>—</td>
+                            <td><span class="badge badge-yellow">投入期</span></td>
+                            <td class="rank-3">★★★☆☆</td>
+                        </tr>
+                        <tr>
+                            <td>服务器制造</td>
+                            <td>浪潮信息/超微</td>
+                            <td class="rank-low">4.88%</td>
+                            <td class="rank-low">11.6%</td>
+                            <td class="rank-low">~116</td>
+                            <td><span class="badge badge-red">承压</span></td>
+                            <td class="rank-low">★☆☆☆☆</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="insight-card" style="background:#f0f9ff;border-left-color:#3b82f6;margin-top:1rem;">
+                <strong>💡 产业链财务洞察与经营启示（财务BP视角）</strong><br><br>
+                <p style="margin-bottom:0.8rem;"><strong>📈 机会点：利润向产业链上游集中，呈"倒微笑曲线"分布</strong></p>
+                <p style="margin-bottom:0.6rem;"><span class="company-tag">HBM/芯片设计</span>毛利率均超75%，是产业链利润最丰厚的环节。<strong>经营启示</strong>：若公司处于上游强议价地位，可通过延长对供应商的应付账期（DPO）、优化营运资本结构来进一步释放现金流；同时需关注技术迭代风险，持续投入研发以维持护城河。</p>
+                <p style="margin-bottom:0.6rem;"><span class="company-tag">晶圆制造</span>毛利率67.7%、CCC仅76天，运营效率全产业链最高。<strong>经营启示</strong>：重资产行业的核心竞争力在于产能利用率与技术领先度，资本开支回报周期相对可控，是产业链中"确定性最强"的环节。</p>
+                <p style="margin-bottom:0.8rem;"><strong>⚠️ 风险点：中游制造环节财务压力最大</strong></p>
+                <p style="margin-bottom:0.6rem;"><span class="company-tag">服务器制造</span>毛利率仅4.88%、净利率1.46%、CCC长达116天，两头受挤（上游芯片成本刚性 + 下游客户压价）。<strong>经营启示</strong>：若公司处于该环节，财务BP需重点关注①库存周转（DIO高达139天，芯片备货占用大量资金）、②应收账款回收（DSO约37天），并建立供应商账期管理机制以缓解营运资本压力；同时需警惕价格战导致的毛利进一步下滑风险。</p>
+                <p style="margin-bottom:0.6rem;"><span class="company-tag">云服务</span>当前处于资本开支投入期，Azure AI毛利率仅20%+。<strong>经营启示</strong>：capex高速增长阶段，财务BP需建立"单位算力投入产出"追踪体系，密切关注算力利用率和折旧压力，确保资本开支节奏与营收增速匹配，避免过度投资。</p>
+                <p style="border-top:1px solid #e2e8f0;padding-top:0.8rem;"><strong>🎯 财务BP方法论</strong><br><br>
+                <strong>本质：</strong>帮老板配置稀缺资源——把有限的钱、精力、时间押注到ROI最高的地方，同时死守现金流，确保永远不下牌桌。<br><br>
+                本项目用<strong>毛利率、CCC、现金流</strong>三把尺子，量化AI算力产业链各环节的盈利质量与资金效率，把"哪个环节好"这种模糊判断，变成<strong>"好在哪里、差在哪里、该怎么应对"</strong>的具体行动。</p>
+            </div>
         </div>
 
         <div class="card">
@@ -467,6 +618,61 @@
             </div>
 
             <p class="data-note">案例来源：21世纪经济报道（2025年7月31日）| 金额单位：人民币</p>
+        </div>
+
+        <div class="card">
+            <h3>🔥 英伟达 2Q FY2027 财报亮点（2026年8月27日发布）</h3>
+            <div class="metric-cards">
+                <div class="metric-card" style="border-top:3px solid #3b82f6;">
+                    <div class="metric-value" style="color:#3b82f6;">$962亿</div>
+                    <div class="metric-label">季度营收<br><small>同比 +106%</small></div>
+                </div>
+                <div class="metric-card" style="border-top:3px solid #8b5cf6;">
+                    <div class="metric-value" style="color:#8b5cf6;">$597亿</div>
+                    <div class="metric-label">净利润<br><small>同比 +126%</small></div>
+                </div>
+                <div class="metric-card" style="border-top:3px solid #06b6d4;">
+                    <div class="metric-value" style="color:#06b6d4;">$890亿</div>
+                    <div class="metric-label">数据中心收入<br><small>同比 +117%</small></div>
+                </div>
+                <div class="metric-card" style="border-top:3px solid #10b981;">
+                    <div class="metric-value" style="color:#10b981;">66%</div>
+                    <div class="metric-label">运营利润率<br><small>毛利率 75%</small></div>
+                </div>
+            </div>
+
+            <div class="insight-card" style="background:#eff6ff;border-left-color:#3b82f6;margin-top:1rem;">
+                <strong>黄仁勋："算力即营收" —— AGI已无意义，可盈利的算力产出才是关键</strong><br><br>
+                <p style="margin-bottom:0.6rem;"><span class="company-tag">核心观点</span>黄仁勋在财报电话会上宣称"对许多任务已实现AGI"，但随即称这些里程碑"毫无意义"，强调AI的价值在于"生成的Token既能创造价值又能带来利润"。</p>
+                <p style="margin-bottom:0.6rem;"><span class="company-tag">财务BP解读</span>市场已从"讲故事"转向"看业绩"——不再为AGI概念买单，而是追问每一份算力投入的ROI。英伟达Q2数据完美回应了这个问题：毛利率75%、运营利润率66%、净利率超62%，每一颗GPU都在产生可计量的利润。</p>
+                <p style="margin-bottom:0.6rem;"><span class="company-tag">GPU资产证券化</span>英伟达联合贝莱德、阿波罗、高盛等建立5000亿美元资本池，将GPU集群+数据中心+长期算力租约打包为"可投资资产"，从"卖铲人"进化为"AI基建的金融操作系统"——用信用增级解决"想买卡的没钱、有钱的不敢投"的行业痛点。</p>
+                <p><span class="company-tag">Vera Rubin量产</span>新一代Vera Rubin架构已全面投产，在CoreWeave、Google Cloud、Microsoft Azure等合作伙伴处运行；下季度营收指引$1080亿（±2%），增长势头仍在加速。</p>
+            </div>
+
+            <p class="data-note">数据来源：英伟达2026财年第二季度财报（2026年8月27日发布）| 美元计价</p>
+        </div>
+
+        <div class="card">
+            <h3>🤖 AI财务分析师（演示版）</h3>
+            <p style="font-size:0.85rem;color:#64748b;margin-bottom:1rem;">基于本页产业链数据，模拟AI助手的财务分析能力。<span style="color:#f59e0b;">⚠️ 演示版使用预设答案，完整版可接入大模型API实现实时问答</span></p>
+            <div class="ai-qa-box">
+                <div class="ai-question-list">
+                    <button class="ai-q-btn active" onclick="showAiAnswer(0, this)">英伟达为什么ROE能超过100%？</button>
+                    <button class="ai-q-btn" onclick="showAiAnswer(1, this)">HBM存储为什么利润这么高？</button>
+                    <button class="ai-q-btn" onclick="showAiAnswer(2, this)">为什么浪潮信息毛利率这么低？</button>
+                    <button class="ai-q-btn" onclick="showAiAnswer(3, this)">各环节经营财务特征有什么差异？</button>
+                    <button class="ai-q-btn" onclick="showAiAnswer(4, this)">云厂商资本开支这么大，赚得回来吗？</button>
+                </div>
+                <div id="aiAnswerBox" class="ai-answer">
+                    <strong>💡 英伟达为什么ROE能超过100%？</strong><br><br>
+                    从杜邦拆解来看，英伟达超高ROE来自三重驱动：<br><br>
+                    <strong>① 净利率极高（约62%）</strong>——这是核心。AI芯片行业的"赢家通吃"效应让英伟达拥有极强定价权。CUDA生态经过十几年积累，形成了软件层面的护城河，客户迁移成本极高。即使毛利率75%的情况下，运营费用率仅约9%，最终净利率超60%，这在硬件公司里几乎是独一份。<br><br>
+                    <strong>② 轻资产模式</strong>——英伟达是Fabless（无晶圆厂）设计公司，自己不建工厂，把制造外包给台积电。这意味着同样的营收，它需要的总资产远低于台积电这类重资产公司，资产周转率自然就高。<br><br>
+                    <strong>③ 适度的财务杠杆</strong>——英伟达的权益乘数并不极端，但经营杠杆极高：每多卖一颗GPU，边际成本很低而边际收入很高，销量增长时利润弹性极大。<br><br>
+                    总结：<strong>生态护城河 → 高定价权 → 高净利率 × 轻资产 → 高ROE</strong>，这是英伟达ROE破百的底层逻辑。
+                </div>
+            </div>
+            <p class="data-note">演示功能 · 完整版可接入DeepSeek/Gemini等大模型API，实现自然语言查询财务数据与智能解读</p>
         </div>
     </div>
 </div>
@@ -803,6 +1009,75 @@ function renderIndustryCharts() {
             }
         }
     });
+
+    // 自动运行一次预算模型，展示默认结果
+    if (typeof runBudgetModel === 'function') runBudgetModel();
+}
+
+// ========== AI财务分析师（演示版） ==========
+const aiAnswers = [
+    {
+        q: '英伟达为什么ROE能超过100%？',
+        a: '从杜邦拆解来看，英伟达超高ROE来自三重驱动：<br><br>' +
+           '<strong>① 净利率极高（约62%）</strong>——这是核心。AI芯片行业的"赢家通吃"效应让英伟达拥有极强定价权。CUDA生态经过十几年积累，形成了软件层面的护城河，客户迁移成本极高。即使毛利率75%的情况下，运营费用率仅约9%，最终净利率超60%，这在硬件公司里几乎是独一份。<br><br>' +
+           '<strong>② 轻资产模式</strong>——英伟达是Fabless（无晶圆厂）设计公司，自己不建工厂，把制造外包给台积电。这意味着同样的营收，它需要的总资产远低于台积电这类重资产公司，资产周转率自然就高。<br><br>' +
+           '<strong>③ 适度的财务杠杆</strong>——英伟达的权益乘数并不极端，但经营杠杆极高：每多卖一颗GPU，边际成本很低而边际收入很高，销量增长时利润弹性极大。<br><br>' +
+           '总结：<strong>生态护城河 → 高定价权 → 高净利率 × 轻资产 → 高ROE</strong>，这是英伟达ROE破百的底层逻辑。'
+    },
+    {
+        q: 'HBM存储为什么利润这么高？',
+        a: 'SK海力士Q2 2026毛利率飙升至83%、营业利润率76%，核心原因是<strong>HBM供需严重失衡</strong>：<br><br>' +
+           '<strong>① 需求侧爆发</strong>——AI大模型训练对HBM（高带宽内存）的需求呈指数级增长。每颗H100需要5颗HBM3，每颗GB200需要8颗HBM3e。四大云厂商2026年资本开支合计增长77%，直接拉动HBM需求。<br><br>' +
+           '<strong>② 供给侧紧缺</strong>——HBM制造工艺复杂，目前全球只有SK海力士、三星、美光三家能量产，其中SK海力士市占率超50%。产能爬坡需要时间，且先进封装（TSV/晶圆键合）是瓶颈，短期内难以快速扩产。<br><br>' +
+           '<strong>③ 产品结构升级</strong>——从HBM2到HBM3再到HBM3e，每代产品单价提升30%-50%，而成本增幅远低于价格增幅。SK海力士高端HBM占比持续提升，拉动整体毛利率走高。<br><br>' +
+           '<strong>④ 客户愿意买单</strong>——对AI云厂商来说，HBM成本只占整台服务器的一小部分，但直接决定了GPU的实际算力表现。"卡脖子"环节议价权最强，这就是存储行业周期性中"超级周期"的来源。'
+    },
+    {
+        q: '为什么浪潮信息毛利率这么低？',
+        a: '浪潮信息毛利率仅4.88%、净利率1.46%，看起来令人意外——AI算力这么火，造服务器的不应该很赚钱吗？原因有三个：<br><br>' +
+           '<strong>① 上游成本刚性</strong>——服务器的核心成本是GPU和CPU，英伟达芯片占了BOM成本的大头。上游芯片厂（英伟达、AMD）拥有极强定价权，价格说涨就涨，服务器厂很难转嫁成本。<br><br>' +
+           '<strong>② 下游客户强势</strong>——服务器的主要买家是云厂商（AWS、阿里、腾讯等）和互联网大厂，它们都是集中采购，议价能力极强。而且云厂商还在搞自研芯片（AWS的Trainium、谷歌的TPU），进一步挤压通用服务器厂的空间。<br><br>' +
+           '<strong>③ 行业同质化竞争</strong>——服务器组装技术壁垒不高，国内有浪潮、新华三、超微、联想、中科曙光等多家厂商，价格战激烈。大家拼的是供应链管理和规模效应，而不是产品溢价。<br><br>' +
+           '这就是产业链"倒微笑曲线"的典型特征：<strong>两端（芯片设计/云服务）利润高，中间（组装制造）利润薄</strong>。浪潮信息虽然营收规模大，但本质是"辛苦钱"生意，ROE只有11.6%，远低于上游芯片厂。'
+    },
+    {
+        q: '各环节经营财务特征有什么差异？',
+        a: '从财务BP视角，结合毛利率、ROE、CCC和现金流四个维度，各环节的经营财务特征差异非常明显：<br><br>' +
+           '<strong>① HBM存储 + 芯片设计：高毛利强议价型</strong><br>' +
+           '毛利率均超75%，是产业链利润最丰厚的环节。经营特征是定价权强、现金流质量高，但技术迭代快、研发投入大。<strong>财务BP关注点</strong>：利用强议价地位优化营运资本（延长DPO），同时管控研发投入的投入产出比，确保技术领先度。<br><br>' +
+           '<strong>② 晶圆制造：重资产高效率型</strong><br>' +
+           '毛利率67.7%，CCC仅76天（运营效率全产业链最高）。经营特征是技术垄断、资本开支大但回报确定。<strong>财务BP关注点</strong>：产能利用率是生命线，需建立详细的capex回报追踪体系，确保每一笔投资都能产生对应的营收。<br><br>' +
+           '<strong>③ 数据中心 + 云服务：高投入长周期型</strong><br>' +
+           '需求确定性高，但当前处于资本开支投入期，盈利尚未释放。经营特征是前期capex大、折旧压力重，但规模效应释放后利润弹性大。<strong>财务BP关注点</strong>：建立"单位算力投入产出"指标体系，密切追踪算力利用率和折旧摊销节奏，警惕过度投资。<br><br>' +
+           '<strong>④ 服务器制造：低毛利高承压型</strong><br>' +
+           '毛利率不到5%，净利率1.46%，CCC长达116天，两头受挤。经营特征是同质化竞争激烈、营运资本占用大、资金压力重。<strong>财务BP关注点</strong>：库存周转和应收账款是核心风险点，需建立严格的营运资本管控机制，同时通过供应链金融（如恒银E链模式）缓解资金压力。<br><br>' +
+           '<strong>核心结论：</strong>产业链利润呈"倒微笑曲线"分布——上游（芯片/存储）利润最高、中游（制造）最薄、下游（云服务）需看长期。财务BP的工作就是帮助公司认清自己在曲线上的位置，针对性地优化财务策略。'
+    },
+    {
+        q: '云厂商资本开支这么大，赚得回来吗？',
+        a: '这是当前市场争议最大的问题。客观说，<strong>短期（1-2年）大概率赚不回来，长期（3-5年）取决于AI应用的商业化进度</strong>。<br><br>' +
+           '<strong>乐观派的逻辑：</strong><br>' +
+           '① AI需求是真实的，不是泡沫——企业愿意为生产力提升付费，Copilot类产品已经在验证付费意愿；<br>' +
+           '② 云厂商有规模效应——先砸钱建基础设施，等利用率上去后毛利率会快速提升（参考AWS过去的发展路径）；<br>' +
+           '③ 算力即基础设施——类比2000年代建数据中心，当时也觉得太贵，但后来证明是必要投入。<br><br>' +
+           '<strong>悲观派的担忧：</strong><br>' +
+           '① Azure AI毛利率仅20%+，远低于传统云服务的40%+，GPU成本吃掉了大部分利润；<br>' +
+           '② 资本开支增速（+77%）远超营收增速，如果需求不及预期，会形成巨大的折旧压力；<br>' +
+           '③ 历史上每次技术热潮都有过度投资的阶段（2000年互联网泡沫、2010年云计算），这次可能也不例外。<br><br>' +
+           '<strong>财务BP视角的判断框架：</strong>不要猜，看两个关键指标——<br>' +
+           '① <strong>算力利用率</strong>：如果新建数据中心利用率能稳定在70%以上，说明需求真实；<br>' +
+           '② <strong>单位算力的收入产出</strong>：也就是"每花1块钱capex能带来多少营收"，这个指标回升时才是盈利拐点。<br><br>' +
+           '目前的状态是：<strong>需求真实但估值超前，短期承压但长期值得跟踪</strong>。'
+    }
+];
+
+function showAiAnswer(idx, btn) {
+    document.querySelectorAll('.ai-q-btn').forEach(function(b) { b.classList.remove('active'); });
+    if (btn) btn.classList.add('active');
+    var box = document.getElementById('aiAnswerBox');
+    if (box && aiAnswers[idx]) {
+        box.innerHTML = '<strong>💡 ' + aiAnswers[idx].q + '</strong><br><br>' + aiAnswers[idx].a;
+    }
 }
 
 // 预算管理模型
