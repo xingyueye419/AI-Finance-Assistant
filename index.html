@@ -1154,6 +1154,18 @@ setDefaultDate();
 document.getElementById('budgetInput').value = monthlyBudget;
 render();
 updateQuote();
+
+// 页面缩放时重新调整图表大小
+let resizeTimer = null;
+window.addEventListener('resize', function() {
+    if (resizeTimer) clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function() {
+        [marginChart, capexChart, cashflowRadar, roeChart, hengfengChart, cccChart].forEach(function(chart) {
+            if (chart) chart.resize();
+        });
+        if (trendChart) trendChart.resize();
+    }, 200);
+});
 </script>
 
 
