@@ -300,7 +300,7 @@
             </div>
             <div class="stats-row">
                 <span class="stats-label">📊 结余</span>
-                <span class="stats-number" id="balance">0.00</span>
+                <span class="stats-number balance-positive" id="balance">0.00</span>
             </div>
             <div class="progress-section">
                 <div style="display: flex; justify-content: space-between;">
@@ -311,16 +311,14 @@
                     </span>
                 </div>
                 <div class="progress-bar-bg">
-                    <div class="progress-fill" id="budgetFill" style="width:0%;">0%</div>
+                    <div class="progress-fill" id="budgetFill" style="width: 0%; background: rgb(59, 130, 246);">0%</div>
                 </div>
             </div>
-            <canvas id="trendChart" class="trend-canvas"></canvas>
-            <div class="insight-card" id="insightCard">
-                📌 添加记录后，将显示财务洞察
-            </div>
+            <canvas id="trendChart" class="trend-canvas" width="1138" height="568" style="display: block; box-sizing: border-box; height: 284px; width: 569px;"></canvas>
+            <div class="insight-card" id="insightCard">📌 添加记录后，将显示财务洞察。</div>
             <hr>
             <h3>📋 流水明细</h3>
-            <div id="recordList" style="max-height: 300px; overflow-y: auto;"></div>
+            <div id="recordList" style="max-height: 300px; overflow-y: auto;"><div style="color:#94a3b8;">暂无记录</div></div>
             <div class="quote-area" id="quoteArea">
                 <span class="quote-text" id="quoteText">💡 钱是手段，不是目的。</span>
                 <button class="refresh-quote" id="refreshQuoteBtn" title="换一句">🔄</button>
@@ -672,7 +670,7 @@
                     总结：<strong>生态护城河 → 高定价权 → 高净利率 × 轻资产 → 高ROE</strong>，这是英伟达ROE破百的底层逻辑。
                 </div>
             </div>
-            <p class="data-note">演示功能 · 完整版可接入DeepSeek/Gemini等大模型API，实现自然语言查询财务数据与智能解读</p>
+            <p class="data-note">演示功能 · 完整版可接入DeepSeek等大模型API，实现自然语言查询财务数据与智能解读</p>
         </div>
     </div>
 </div>
@@ -1157,6 +1155,8 @@ document.getElementById('budgetInput').value = monthlyBudget;
 render();
 updateQuote();
 </script>
+
+
 
 
 
