@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-immersive-translate-page-theme="light"><head>
+<html lang="zh-CN"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>智能财务助手 · AI算力产业链财务分析</title>
@@ -258,7 +258,7 @@
         }
         .ai-answer strong { color: #0f172a; }
     </style>
-<style data-id="immersive-translate-input-injected-css"></style></head>
+</head>
 <body>
 <div class="container">
     <!-- Tab 导航 -->
@@ -689,9 +689,17 @@ function switchTab(tabName) {
 }
 
 // ========== 个人财务助手 ==========
-let records = JSON.parse(localStorage.getItem('finance_records') || '[]');
+// 部分手机内置浏览器（vivo/QQ 等）会禁用或拦截 localStorage，直接访问会抛异常并把整个脚本中断，
+// 导致所有按钮（支出/收入/导出等）失效。这里统一做安全包装，禁用时降级为本次会话内可用。
+let storageOK = true;
+function storageGet(key) { try { return localStorage.getItem(key); } catch (e) { storageOK = false; return null; } }
+function storageSet(key, value) { try { localStorage.setItem(key, value); } catch (e) { storageOK = false; } }
+function loadRecords() {
+    try { return JSON.parse(storageGet('finance_records') || '[]'); } catch (e) { return []; }
+}
+let records = loadRecords();
 let currentRange = "month";
-let monthlyBudget = parseFloat(localStorage.getItem('finance_budget') || '5000');
+let monthlyBudget = parseFloat(storageGet('finance_budget') || '5000') || 5000;
 let trendChart = null;
 
 const quotes = [
@@ -772,8 +780,8 @@ function getFiltered() {
 }
 
 function saveData() {
-    localStorage.setItem('finance_records', JSON.stringify(records));
-    localStorage.setItem('finance_budget', monthlyBudget.toString());
+    storageSet('finance_records', JSON.stringify(records));
+    storageSet('finance_budget', monthlyBudget.toString());
 }
 
 function render() {
@@ -1155,6 +1163,12 @@ document.getElementById('budgetInput').value = monthlyBudget;
 render();
 updateQuote();
 
+// 若浏览器禁用本地存储，提示用户：功能可用但本次改动不会保存
+if (!storageOK) {
+    const footer = document.querySelector('.footer-note');
+    if (footer) footer.innerHTML = '⚠️ 当前浏览器禁用了本地存储，新增/修改的记录关闭页面后会丢失。建议改用 Chrome / Safari 或电脑浏览器打开。';
+}
+
 // 页面缩放时重新调整图表大小
 let resizeTimer = null;
 window.addEventListener('resize', function() {
@@ -1167,21 +1181,5 @@ window.addEventListener('resize', function() {
     }, 200);
 });
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</body></html>
-<!-- test write -->
+</body>
+</html>
